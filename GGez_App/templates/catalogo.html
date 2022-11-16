@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+
+
+{% block encabezado %}
+<h1> Catálogo de Juegos </h1>
+{% endblock %}
+
+{% block contenido %}
+	<dl>
+		{% for juego in catalogo %}
+	  	<dt>
+	  		<a href='juego/{{juego.id}}'>{{juego.titulo}}</a><br>
+			<img src= "{{MEDIA_URL}}{{juego.caratula}}" width=100px height=100px>
+			<br><br>
+	    </dt>
+		{% endfor %}
+	</dl>
+{% endblock %}
