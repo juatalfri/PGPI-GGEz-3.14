@@ -7,5 +7,5 @@ class Juego(models.Model):
     precio = models.FloatField()
     caratula = models.ImageField(upload_to= 'caratulas', verbose_name='carátula')
     genero = models.TextField(verbose_name='género')
-    def __unicode__(self):
+    def __str__(self):
         return self.titulo
