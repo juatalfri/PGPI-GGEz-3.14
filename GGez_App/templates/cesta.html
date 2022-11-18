@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block encabezado %}
+<h1> CatÃ¡logo de Juegos </h1>
+{% endblock %}
+
+{% block contenido %}
+		{% for categoria,juegos in dic_categorias.items %}
+		<div class="card" align="center">
+			<div class="card-header", id="heading">
+				<h1 class="mb-0">
+					<h3> {{categoria}} </h3>
+				</h1>	 
+	    	</div>
+		    	<div class="card-body">
+            <div class="row text-center">
+				{% for juego in juegos %}
+                <div class="col-md-4" id="juego">
+                    <div class="bloque-titulo">
+                        <a href="juego/{{juego.id}}" class="juego-titulo">{{juego.titulo}}</a>
+                    </div>
+                    <div class="card">
+                        <a href="juego/{{juego.id}}"><img class="card-img-top" src="{{MEDIA_URL}}{{juego.caratula}}"></a>
+                    </div>
+                    <div class="photo-info">
+                        <p class="juego-precio"> {{juego.precio}} â‚¬</p>
+                    </div>
+	    	</div>
+	    		{% endfor %}
+				</div>
+			</div>
+		{% endfor %}
+	</dl>
+{% endblock %}

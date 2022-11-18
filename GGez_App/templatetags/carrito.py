@@ -16,7 +16,7 @@ def esta_en_el_carrito(juego, carrito):
 def cantidad_carrito(juego, carrito):
     keys = carrito.keys()
     for id in keys:
-        if int (id) == juego.id:
+        if int(id) == juego.id:
             return carrito.get(id)
     return 0;
 
