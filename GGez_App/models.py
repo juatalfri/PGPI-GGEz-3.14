@@ -54,11 +54,11 @@ class Juego(models.Model):
             return Juego.getTodosJuegos();
 
 class Cliente(models.Model):
-    nombre = models.CharField(max_length=50)
-    apellidos = models.CharField(max_length=50)
+    # nombre = models.CharField(max_length=50)
+    # apellidos = models.CharField(max_length=50)
     nombreUsuario = models.CharField(max_length=50)
-    telefono = models.CharField(max_length=10)
-    correo = models.EmailField()
+    # telefono = models.CharField(max_length=10)
+    # correo = models.EmailField()
     contrasena = models.CharField(max_length=20)
     
     def registro(self):

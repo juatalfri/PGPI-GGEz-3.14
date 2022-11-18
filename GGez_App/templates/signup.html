@@ -28,18 +28,11 @@
                 </div>
                 {% endif %}
 
-                <div class="form-group">
+<!--                 <div class="form-group">
                     <label for="">Nombre</label>
                     <input type="text" name="nombre"
                      id="" value="{{values.nombre}}" class="form-control form-control-sm" 
                      placeholder="Andrés">
-                </div>
-
-				<div class="form-group">
-                    <label for="">Nombre de usuario</label>
-                    <input type="text" name="nombreUsuario"
-                     id="" value="{{values.nombreUsuario}}" class="form-control form-control-sm" 
-                     placeholder="SrChacho">
                 </div>
 
                 <div class="form-group">
@@ -48,7 +41,7 @@
                     id="" value="{{apellidos}}" class="form-control form-control-sm"
                     >
                 </div>
-
+                
                 <div class="form-group">
                     <label for="">Teléfono</label>
                     <input type="text" name="telefono" 
@@ -57,16 +50,21 @@
                     placeholder="123456789"
                     >
                 </div>
-                <!-- email -->
+
                 <div class="form-group">
                     <label for="">Correo</label>
                     <input required type="correo" name="correo" id=""
                     value="{{values.correo}}" 
                     class=" form-control-sm form-control" placeholder="ejemplo@gmail.com">
                 </div>
-
-
-                <!-- password -->
+ -->
+				<div class="form-group">
+                    <label for="">Nombre de usuario</label>
+                    <input type="text" name="nombreUsuario"
+                     id="" value="{{values.nombreUsuario}}" class="form-control form-control-sm" 
+                     placeholder="ejemplo">
+                </div>
+                
                 <div class="form-group">
                     <label for="">Contraseña</label>
                     <input type="password" 
@@ -76,7 +74,6 @@
                 </div>
                 <hr>
                 <button type="submit" class="btn btn-sm btn-success col-lg-12">Crear mi cuenta</button>
-
             </form>
         </div>
     </div>
