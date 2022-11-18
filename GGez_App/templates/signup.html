@@ -1,0 +1,85 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+
+<div class="container mt-4">
+    
+    <div class="p-3 m-3">
+
+        
+        <div class="col-lg-5 rounded mx-auto border pt-4">
+            <div class="text-center col">
+            
+                <img
+                src="https://th.bing.com/th/id/Rd51d7c0fde6d96a31538a86cbd57f3c0?rik=%2fTJxRkU2V371QQ&riu=http%3a%2f%2ftechnologyend.com%2fwp-content%2fuploads%2f2015%2f11%2fwhy-shop-online.jpg&ehk=v1KiYT0i5U1ABCRueDSdLqnazh2BdlVD89Z4qXE0Kgs%3d&risl=&pid=ImgRaw" alt=""
+                class="" style="height: 150px;">
+            <!-- <hr> -->
+            <hr>
+            </div>
+            <h3 class="alert alert-success rounded-pill" style="text-align:center">Crear una cuenta</h3>
+            <form action="/signup/" method="POST">
+                
+                {% csrf_token %}
+
+                {% if error%}
+                <div class="alert alert-danger" role="alert">
+                    {{error}}
+                </div>
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="">Nombre</label>
+                    <input type="text" name="nombre"
+                     id="" value="{{values.nombre}}" class="form-control form-control-sm" 
+                     placeholder="Andrés">
+                </div>
+
+				<div class="form-group">
+                    <label for="">Nombre de usuario</label>
+                    <input type="text" name="nombreUsuario"
+                     id="" value="{{values.nombreUsuario}}" class="form-control form-control-sm" 
+                     placeholder="SrChacho">
+                </div>
+
+                <div class="form-group">
+                    <label for="">Apellidos</label>
+                    <input type="text" name="apellidos" 
+                    id="" value="{{apellidos}}" class="form-control form-control-sm"
+                    >
+                </div>
+
+                <div class="form-group">
+                    <label for="">Teléfono</label>
+                    <input type="text" name="telefono" 
+                    id="" class="form-control form-control-sm"
+                    value="{{values.telefono}}"
+                    placeholder="123456789"
+                    >
+                </div>
+                <!-- email -->
+                <div class="form-group">
+                    <label for="">Correo</label>
+                    <input required type="correo" name="correo" id=""
+                    value="{{values.correo}}" 
+                    class=" form-control-sm form-control" placeholder="ejemplo@gmail.com">
+                </div>
+
+
+                <!-- password -->
+                <div class="form-group">
+                    <label for="">Contraseña</label>
+                    <input type="password" 
+                    name="contrasena" 
+                    id=""
+                     class="form-control form-control-sm">
+                </div>
+                <hr>
+                <button type="submit" class="btn btn-sm btn-success col-lg-12">Crear mi cuenta</button>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
