@@ -1,0 +1,94 @@
+{% extends 'base.html' %}
+
+
+{% block content %}
+{% load carrito %}
+{% load filtros %}
+<div class="container">
+   <div class="border rounded p-4 m-4">
+        <h3>Tu carrito de la compra</h3>
+        <hr>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Juego</th>
+                    <th>Título</th>
+                    <th>Precio</th>
+                    <th>Cantidad</th>
+                    <th>Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                
+                {% for juego in juegos %}
+                <tr>
+                    <td>{{forloop.counter}}</td>
+                    <td><img style="height: 80px;" src="{{MEDIA_URL}}{{juego.caratula}}"></td>
+                    <td>{{juego.titulo}}</td>
+                    <td>{{juego.precio|divisa}}</td>
+                    <td>{{juego|cantidad_carrito:request.session.carrito}}</td>
+                    <td>{{juego|precio_total:request.session.carrito|divisa}}</td>
+                </tr>
+
+                {% endfor %}
+               
+            </tbody>
+
+            <tfoot>
+                <tr>
+                    <th colspan="4"></th>
+                    <th class="" colspan="">Total</th>
+                    <th>{{juegos|precio_total_carrito:request.session.carrito|floatformat:2|divisa}}</th>
+                </tr>
+            </tfoot>
+        </table>
+        <hr>
+        <div class="m-3 p-3">
+            <a href="#" data-toggle="modal" data-target="#exampleModal" class="btn btn-outline-success border rounded  col-lg-3 float-right">Confirmar pedido</a>
+        </div>
+   </div>
+</div>
+
+
+<!-- modal -->
+
+  <!-- Modal -->
+  <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">
+              Formulario de pedido
+          </h5>
+          <hr>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="m-2 p-3">
+            <form action="/check-out" method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                  <label for="">Dirección</label>
+                  <input type="text" name="direccion" id="" class="form-control" aria-describedby="helpId">
+                  
+                </div>
+                <div class="form-group">
+                    <label for="">Teléfono</label>
+                    <input type="text" name="telefono" id="" class="form-control" aria-describedby="helpId">
+                  </div>
+
+                  <input type="submit" class="btn float-right btn-outline-success col-lg-6" value="Check out">
+            </form>
+          </div>
+        </div>
+        
+      </div>
+    </div>
+  </div>
+
+
+
+{% endblock %}

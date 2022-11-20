@@ -5,22 +5,60 @@
   {% load bootstrap4 %}
   {% bootstrap_css %}
   <style>
-   {% block style_css %}{% endblock %}
+    {% block style_css %}{% endblock %}
+    nav{
+      background-color: orange;
+    }
   </style>
+  <title>GGEz</title>
 </head>
 <body>
-  <header> 
-  	{% block encabezado %}{% endblock %}
-  	<nav>
-  		<dl>
-			<dd><a href='/'>Inicio</h3></dd>
-			<dd><a href='/catalogo'>Catálogo</a></dd>
-		</dl>
-	</nav>
-  </header>
-  <section>
-    {% block contenido %}{% endblock %}
-  </section>
-  {% block pie %}{% endblock %} 
+<nav class="one-edge-shadow navbar navbar-light sticky-top navbar navbar-expand-lg text-white">
+    <a class="navbar-brand ms-3 text-dark" href="/">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.7.0/css/all.css" integrity="sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ" crossorigin="anonymous">
+    <img src="http://images3.memedroid.com/images/UPLOADED101/5f71f5cf73c53.jpeg" style="width:50px;height:50px,color:text-light;">GGEz</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="/catalogo">Catalogo<span class="sr-only">(current)</span></a>
+        </li>
+
+          </ul>
+
+
+
+
+      <ul class=" navbar-nav my-2 my-lg-0">
+
+        <li class="nav-item active">
+          <a class="nav-link" href="/carrito">Carrito 
+            <span class="badge badge-success">{{request.session.carrito.keys|length}}</span>
+            <span class="sr-only">(current)</span></a>
+        </li>
+
+        {% if request.session.cliente %}
+        
+        <li class="nav-item active ">
+          <a class="nav-link" href="/pedido">Pedidos<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active ">
+          <a class="nav-link" href="/logout">Logout<span class="sr-only">(current)</span></a>
+        </li>
+        {% else %}
+       
+        <li class="nav-item active">
+          <a class="nav-link" href="/signup">Signup<span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item active">
+          <a class="nav-link" href="/login">Login<span class="sr-only">(current)</span></a>
+        </li>
+        {% endif %}
+      </ul>
+    </div>
+  </nav>
+  {% block content %}{% endblock %}
 </body>
 </html>

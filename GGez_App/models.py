@@ -1,10 +1,17 @@
 from django.db import models
+from unittest.util import _MAX_LENGTH
+from django.template.defaultfilters import default
+from django.utils import timezone
 
 
 class Categoria(models.Model):
     categoria = models.CharField(max_length=50, unique = True, verbose_name='categoría')
     def __str__(self):
         return self.categoria
+    
+    @staticmethod
+    def getTodasCategorias():
+        return Categoria.objects.all()
     
 class Juego(models.Model):
     
@@ -27,5 +34,64 @@ class Juego(models.Model):
     caratula = models.ImageField(upload_to= 'caratulas', verbose_name='carátula')
     categoria = models.ManyToManyField(Categoria)
     pegi = models.IntegerField(choices=CHOICES)
+    
     def __str__(self):
         return self.titulo
+    
+    @staticmethod
+    def getJuegosPorId(ids):
+        return Juego.objects.filter(id__in=ids)
+    
+    @staticmethod
+    def getTodosJuegos():
+        return Juego.objects.all()
+    
+    @staticmethod
+    def getTodosJuegosPorCategoria(categoriaId):
+        if categoriaId:
+            return Juego.objects.filter(categoria=categoriaId)
+        else:
+            return Juego.getTodosJuegos();
+
+class Cliente(models.Model):
+    # nombre = models.CharField(max_length=50)
+    # apellidos = models.CharField(max_length=50)
+    nombreUsuario = models.CharField(max_length=50)
+    # telefono = models.CharField(max_length=10)
+    # correo = models.EmailField()
+    contrasena = models.CharField(max_length=20)
+    
+    def registro(self):
+        self.save()
+        
+    def __str__(self):
+        return self.nombreUsuario
+    
+    def existe(self):
+        if Cliente.objects.filter(nombreUsuario=self.nombreUsuario):
+            return True
+  
+        return False
+    
+    @staticmethod
+    def getClientePorNombreUsuario(nombreUsuario):
+        try:
+            return Cliente.objects.get(nombreUsuario=nombreUsuario)
+        except:
+            return False
+    
+class Pedido(models.Model):
+    juego = models.ForeignKey(Juego, on_delete=models.CASCADE)
+    cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
+    cantidad = models.IntegerField(default=1)
+    precio = models.IntegerField()
+    fecha = models.DateField(default=timezone.now)
+    direccion = models.CharField(max_length=50, default='', blank=True)
+    telefono = models.CharField(max_length=50, default='', blank=True)
+    
+    def hacerPedido(self):
+        self.save()
+        
+    @staticmethod
+    def getPedidosPorCliente(idCliente):
+        return Pedido.objects.filter(cliente=idCliente).order_by('-fecha')
