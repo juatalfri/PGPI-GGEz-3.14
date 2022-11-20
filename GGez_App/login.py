@@ -1,9 +1,3 @@
-'''
-Created on 17 nov 2022
-
-@author: andres
-'''
-
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.contrib.auth.hashers import check_password
 from GGez_App.models import *
