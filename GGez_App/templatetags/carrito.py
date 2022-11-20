@@ -2,7 +2,6 @@ from django import template
 
 register = template.Library ()
 
-
 @register.filter (name='esta_en_el_carrito')
 def esta_en_el_carrito(juego, carrito):
     keys = carrito.keys()
@@ -33,3 +32,11 @@ def precio_total_carrito(juegos, carrito):
         sum += precio_total(j, carrito)
 
     return sum
+
+@register.filter (name='cantidad_maxima')
+def cantidad_maxima(juego, carrito):
+    cantidad = cantidad_carrito(juego, carrito)
+    if cantidad >= juego.cantidad:
+        return True
+    else:
+        return False
