@@ -32,6 +32,7 @@ class Juego(models.Model):
     desarrollador = models.CharField(max_length=50)
     precio = models.FloatField()
     caratula = models.ImageField(upload_to= 'caratulas', verbose_name='carátula')
+    cantidad = models.IntegerField()
     categoria = models.ManyToManyField(Categoria)
     pegi = models.IntegerField(choices=CHOICES)
     
