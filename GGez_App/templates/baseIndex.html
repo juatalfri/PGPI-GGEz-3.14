@@ -25,11 +25,18 @@
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <form class="collapse navbar-collapse" id="navbarSupportedContent" method="GET" action="catalogo/">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item active">
           <a class="nav-link" href="/cat">Catalogo<span class="sr-only">(current)</span></a>
         </li>
+		<li id="search-bar" class="col-lg-12">
+          <input type="search" name="searchbar" class="form-control" placeholder="Buscar juego por nombre o desarrollador"/>
+		</li>
+		<li id="search-button">
+		  <input class="btn btn-primary" type="submit" value="Buscar">
+ 	 	  </input>
+		</li>
       </ul>
 
       <ul class=" navbar-nav my-2 my-lg-0">
@@ -57,7 +64,7 @@
         </li>
         {% endif %}
       </ul>
-    </div>
+    </form>
   </nav>
   {% block content %}{% endblock %}
 </body>

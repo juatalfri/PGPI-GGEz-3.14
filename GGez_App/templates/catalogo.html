@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'baseCatalogo.html' %}
 
 {% block content %}
 
@@ -22,10 +22,10 @@
 		<div class="col-lg-3 mx-auto">
 			<div class="list-group">
 
-				<a href="/" class="list-group-item list-group-item-action btn btn-outline-success">Todos los juegos</a>
+				<a href="/cat/" class="list-group-item list-group-item-action btn btn-outline-success">Todos los juegos</a>
 
 				{% for categoria in categorias %}
-				<a href="/?categoria={{categoria.id}}"
+				<a href="/catalogo/?categoria={{categoria.id}}"
 					class="list-group-item list-group-item-action btn btn-outline-success ">{{categoria.categoria}}</a>
 				{% endfor %}
 			</div>
@@ -46,7 +46,7 @@
 					{%if juego|hay_en_stock %}
 						{% if juego|esta_en_el_carrito:request.session.carrito %}
 							<div class="row no-gutters">
-								<form action="/#{{juego.id}}" class="col-2 " method="post">
+								<form action="/cat/#{{juego.id}}" class="col-2 " method="post">
 									{% csrf_token %}
 									<input hidden type="text" name='juego' value='{{juego.id}}'>
 									<input hidden type="text" name='remove' value='True'>
@@ -56,7 +56,7 @@
 								{%if juego|cantidad_maxima:request.session.carrito %}
 									
 								{% else %}
-									<form action="/#{{juego.id}}" class="col-2 " method="post">
+									<form action="/cat/#{{juego.id}}" class="col-2 " method="post">
 										{% csrf_token %}
 										<input hidden type="text" name='juego' value='{{juego.id}}'>
 										<input type="submit" value=" + " class="btn btn-block btn-success border-left">
@@ -64,7 +64,7 @@
 								{% endif %}
 							</div>
 							{% else %}
-							<form action="/#{{juego.id}}" method="POST" class="btn-block">
+							<form action="/cat/#{{juego.id}}" method="POST" class="btn-block">
 								{% csrf_token %}
 								<input hidden type="text" name='juego' value='{{juego.id}}'>
 								<input type="submit" class="float-right btn btn-success form-control"

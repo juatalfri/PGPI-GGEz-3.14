@@ -2,6 +2,7 @@ from django.db import models
 from unittest.util import _MAX_LENGTH
 from django.template.defaultfilters import default
 from django.utils import timezone
+from django.db.models import Q
 
 
 class Categoria(models.Model):
@@ -53,6 +54,13 @@ class Juego(models.Model):
             return Juego.objects.filter(categoria=categoriaId)
         else:
             return Juego.getTodosJuegos();
+        
+    @staticmethod        
+    def getJuegoBusqueda(categoriaId, texto):
+        if categoriaId:
+            return Juego.objects.filter(Q(categoria=categoriaId) & Q(titulo__contains=texto) | Q(desarrollador__contains=texto))
+        else:
+            return Juego.objects.filter(Q(titulo__contains=texto) | Q(desarrollador__contains=texto));
 
 class Cliente(models.Model):
     # nombre = models.CharField(max_length=50)
