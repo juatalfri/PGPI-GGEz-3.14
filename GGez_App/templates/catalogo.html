@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'baseCatalogo.html' %}
 
 {% block content %}
 
@@ -8,79 +8,85 @@
 <div class="container-fluid mt-3">
 	<div class="row">
 	
-	{% for message in messages %}
-    
-    	<div class="alert alert-success">
-        	<a class="close" href="#" data-dismiss="alert">×</a>
-           	{{ message }}
-    	</div>
-
-	{% endfor %}
-
 		<!-- filtros -->
 
-		<div class="col-lg-3 mx-auto">
+		<div class="col-lg-2 mx-auto">
 			<div class="list-group">
 
-				<a href="/" class="list-group-item list-group-item-action btn btn-outline-success">Todos los juegos</a>
+				<a href="/cat/" class="list-group-item list-group-item-action btn btn-outline-success">Todos los juegos</a>
 
 				{% for categoria in categorias %}
-				<a href="/?categoria={{categoria.id}}"
+				<a href="/catalogo/?categoria={{categoria.id}}"
 					class="list-group-item list-group-item-action btn btn-outline-success ">{{categoria.categoria}}</a>
 				{% endfor %}
 			</div>
 		</div>
 
-		<!-- todos los juegos -->
-		<div id='juegos' class="col-lg-9 mx-auto">
-			<div class="row mx-auto">
-				{% for juego in juegos %}
-				<div juego="card mx-juegos mb-3" id={{juego.id}} style="width: 18rem;">
-					<img class="card-img-top" src="{{MEDIA_URL}}{{juego.caratula}}" alt="Card image cap">
-					<div class="card-body">
-						<p class="card-title">{{juego.titulo}}</p>
-						<p class="card-text"><b>{{juego.precio|divisa}}</b></p>
-					</div>
-
-					<div class="card-footer p-0 no-gutters">
-					{%if juego|hay_en_stock %}
-						{% if juego|esta_en_el_carrito:request.session.carrito %}
-							<div class="row no-gutters">
-								<form action="/#{{juego.id}}" class="col-2 " method="post">
-									{% csrf_token %}
-									<input hidden type="text" name='juego' value='{{juego.id}}'>
-									<input hidden type="text" name='remove' value='True'>
-									<input type="submit" value=" - " class="btn btn-block btn-success border-right">
-								</form>
-								<div class="text-center col btn btn-success">{{juego|cantidad_carrito:request.session.carrito}} en carrito</div>
-								{%if juego|cantidad_maxima:request.session.carrito %}
-									
-								{% else %}
-									<form action="/#{{juego.id}}" class="col-2 " method="post">
+		<div class="col">
+		
+			{% for message in messages %}
+	    
+	    		<div class="alert alert-success">
+	        		<a class="close" href="#" data-dismiss="alert">×</a>
+	           			{{ message }}
+	    		</div>
+	
+			{% endfor %}
+			
+	
+			<!-- todos los juegos -->
+			<div id='juegos' class="col-lg-12 mx-auto ">
+				<div class="row" id="game-cards">
+					{% for juego in juegos %}
+						<div class="col-3">
+						<div juego="card mx-juegos mb-3" id={{juego.id}} style="width: 18rem;">
+							<img class="card-img-top" src="{{MEDIA_URL}}{{juego.caratula}}" alt="Card image cap">
+							<div class="card-body">
+								<p class="card-title">{{juego.titulo}}</p>
+								<p class="card-text"><b>{{juego.precio|divisa}}</b></p>
+							</div>
+		
+							<div class="card-footer p-0 no-gutters">
+							{%if juego|hay_en_stock %}
+								{% if juego|esta_en_el_carrito:request.session.carrito %}
+									<div class="row no-gutters">
+										<form action="/#{{juego.id}}" class="col-2 " method="post">
+											{% csrf_token %}
+											<input hidden type="text" name='juego' value='{{juego.id}}'>
+											<input hidden type="text" name='remove' value='True'>
+											<input type="submit" value=" - " class="btn btn-block btn-success border-right">
+										</form>
+										<div class="text-center col btn btn-success">{{juego|cantidad_carrito:request.session.carrito}} en carrito</div>
+										{%if juego|cantidad_maxima:request.session.carrito %}
+											
+										{% else %}
+											<form action="/#{{juego.id}}" class="col-2 " method="post">
+												{% csrf_token %}
+												<input hidden type="text" name='juego' value='{{juego.id}}'>
+												<input type="submit" value=" + " class="btn btn-block btn-success border-left">
+											</form>
+										{% endif %}
+									</div>
+									{% else %}
+									<form action="/#{{juego.id}}" method="POST" class="btn-block">
 										{% csrf_token %}
 										<input hidden type="text" name='juego' value='{{juego.id}}'>
-										<input type="submit" value=" + " class="btn btn-block btn-success border-left">
+										<input type="submit" class="float-right btn btn-success form-control"
+											value="Añadir al carrito">
 									</form>
-								{% endif %}
-							</div>
+									{% endif %}
 							{% else %}
-							<form action="/#{{juego.id}}" method="POST" class="btn-block">
-								{% csrf_token %}
-								<input hidden type="text" name='juego' value='{{juego.id}}'>
-								<input type="submit" class="float-right btn btn-success form-control"
-									value="Añadir al carrito">
-							</form>
+                <div class="card-agotado">
+                  <p class="card-agotado"><b>AGOTADO</b></p>
+                </div>
 							{% endif %}
-					{% else %}
-					<div class="card-agotado">
-						<p class="card-agotado"><b>AGOTADO</b></p>
+              
+							</div>
+		
+						</div>
 					</div>
-
-					{% endif %}
-					</div>
-
+					{% endfor %}
 				</div>
-				{% endfor %}
 			</div>
 		</div>
 	</div>
