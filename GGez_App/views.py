@@ -24,7 +24,6 @@ def catalogo(request):
     data['categorias'] = categorias
     data['busqueda'] = busqueda
 
-    print('Eres : ', request.session.get('nombreUsuario'))
     return render(request, 'catalogo.html', data)
 
 def Carrito(request):
@@ -50,3 +49,5 @@ def Pedido(request):
     pedidos = Pedido.getPedidosPorCliente(cliente)
     return render(request, 'pedido.html', {'pedidos' : pedidos})
     
+def politicaEnvio(request):
+    return render(request,'politicaEnvio.html')
