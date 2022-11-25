@@ -13,7 +13,7 @@ def catalogo(request):
     juegos = None
     categorias = Categoria.getTodasCategorias()
     categoriaId = request.GET.get('categoria')
-    busqueda= request.GET.get('searchbar')
+    busqueda = request.GET.get('searchbar')
     if busqueda:    
         juegos = Juego.getJuegoBusqueda(categoriaId,busqueda)
     else:

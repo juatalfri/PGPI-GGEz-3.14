@@ -11,6 +11,25 @@
 		<!-- filtros -->
 
 		<div class="col-lg-2 mx-auto">
+		    <form id="navbarSupportedContentPrices" method="GET">
+		      <div class="navbar-nav mr-auto">
+				<div class="row d-flex justify-content-around">
+					<div id="search-bar" class="col-lg-5">
+			          <input type="search" name="min" class="form-control" placeholder="Min"/>
+					</div>
+					<div id="search-bar" class="col-lg-5">
+			          <input type="search" name="max" class="form-control" placeholder="Max"/>
+					</div>
+				</div>
+				<div id="search-button" class="row d-flexx justify-content-center">
+				  <input class="btn btn-primary" type="submit" value="Buscar"></input>
+				</div>
+		      </div>
+			</form>
+			<br>
+			<br>
+			<br>
+			<br>
 			<div class="list-group">
 
 				<a href="/cat/" class="list-group-item list-group-item-action btn btn-outline-success">Todos los juegos</a>
@@ -50,7 +69,7 @@
 							{%if juego|hay_en_stock %}
 								{% if juego|esta_en_el_carrito:request.session.carrito %}
 									<div class="row no-gutters">
-										<form action="/#{{juego.id}}" class="col-2 " method="post">
+										<form action="/cat/#{{juego.id}}" class="col-2 " method="post">
 											{% csrf_token %}
 											<input hidden type="text" name='juego' value='{{juego.id}}'>
 											<input hidden type="text" name='remove' value='True'>
@@ -60,7 +79,7 @@
 										{%if juego|cantidad_maxima:request.session.carrito %}
 											
 										{% else %}
-											<form action="/#{{juego.id}}" class="col-2 " method="post">
+											<form action="/cat/#{{juego.id}}" class="col-2 " method="post">
 												{% csrf_token %}
 												<input hidden type="text" name='juego' value='{{juego.id}}'>
 												<input type="submit" value=" + " class="btn btn-block btn-success border-left">
@@ -68,7 +87,7 @@
 										{% endif %}
 									</div>
 									{% else %}
-									<form action="/#{{juego.id}}" method="POST" class="btn-block">
+									<form action="/cat/#{{juego.id}}" method="POST" class="btn-block">
 										{% csrf_token %}
 										<input hidden type="text" name='juego' value='{{juego.id}}'>
 										<input type="submit" class="float-right btn btn-success form-control"
