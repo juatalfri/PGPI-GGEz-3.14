@@ -21,6 +21,7 @@ from django.conf import settings
 import django.views
 from GGez_App.signup import Signup
 from GGez_App.catalogo import Catalogo
+from GGez_App.carrito import Cart
 from GGez_App.login import Login, logout
 from django.conf.urls.static import static
 from GGez_App.views import Carrito
@@ -37,6 +38,7 @@ urlpatterns = [
     path('login/', Login.as_view(), name='login'),
     path('logout/', logout , name='logout'),
     path('carrito/', views.Carrito, name='carrito'),
+    path('cart/', Cart.as_view(), name='cart'),
     path('check-out/', views.Checkout, name='checkout'),
     path('pedido/', views.Pedido, name='pedidos'),
     path('politicaEnvio/', views.politicaEnvio)

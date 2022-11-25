@@ -50,7 +50,7 @@
 							{%if juego|hay_en_stock %}
 								{% if juego|esta_en_el_carrito:request.session.carrito %}
 									<div class="row no-gutters">
-										<form action="/#{{juego.id}}" class="col-2 " method="post">
+										<form action="/cat/#{{juego.id}}" class="col-2 " method="post">
 											{% csrf_token %}
 											<input hidden type="text" name='juego' value='{{juego.id}}'>
 											<input hidden type="text" name='remove' value='True'>
@@ -60,7 +60,7 @@
 										{%if juego|cantidad_maxima:request.session.carrito %}
 											
 										{% else %}
-											<form action="/#{{juego.id}}" class="col-2 " method="post">
+											<form action="/cat/#{{juego.id}}" class="col-2 " method="post">
 												{% csrf_token %}
 												<input hidden type="text" name='juego' value='{{juego.id}}'>
 												<input type="submit" value=" + " class="btn btn-block btn-success border-left">
@@ -68,7 +68,7 @@
 										{% endif %}
 									</div>
 									{% else %}
-									<form action="/#{{juego.id}}" method="POST" class="btn-block">
+									<form action="/cat/#{{juego.id}}" method="POST" class="btn-block">
 										{% csrf_token %}
 										<input hidden type="text" name='juego' value='{{juego.id}}'>
 										<input type="submit" class="float-right btn btn-success form-control"
