@@ -14,8 +14,12 @@ def catalogo(request):
     categorias = Categoria.getTodasCategorias()
     categoriaId = request.GET.get('categoria')
     busqueda = request.GET.get('searchbar')
+    minimo = request.GET.get('min')
+    maximo = request.GET.get('max')
     if busqueda:    
         juegos = Juego.getJuegoBusqueda(categoriaId,busqueda)
+    elif ((minimo != None) | (maximo != None)):
+        juegos = Juego.getJuegosPrecio(minimo,maximo)
     else:
         juegos = Juego.getTodosJuegosPorCategoria(categoriaId)
             
