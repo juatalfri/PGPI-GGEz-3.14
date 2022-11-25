@@ -17,6 +17,7 @@
                     <th>Precio</th>
                     <th>Cantidad</th>
                     <th>Total</th>
+					<th>Modificar cantidad</th>
                 </tr>
             </thead>
             <tbody>
@@ -29,6 +30,28 @@
                     <td>{{juego.precio|divisa}}</td>
                     <td>{{juego|cantidad_carrito:request.session.carrito}}</td>
                     <td>{{juego|precio_total:request.session.carrito|divisa}}</td>
+                    <td>
+                        {% if juego|esta_en_el_carrito:request.session.carrito %}
+							<div class="row no-gutters">
+								<form action="/cart/#{{juego.id}}" class="col-2 " method="post">
+									{% csrf_token %}
+									<input hidden type="text" name='juego' value='{{juego.id}}'>
+									<input hidden type="text" name='remove' value='True'>
+									<input type="submit" value=" - " class="btn btn-block btn-success border-right">
+								</form>
+								<div class="text-center col btn btn-success">{{juego|cantidad_carrito:request.session.carrito}} en carrito</div>
+								{%if juego|cantidad_maxima:request.session.carrito %}
+							
+								{% else %}
+									<form action="/cart/#{{juego.id}}" class="col-2 " method="post">
+										{% csrf_token %}
+										<input hidden type="text" name='juego' value='{{juego.id}}'>
+										<input type="submit" value=" + " class="btn btn-block btn-success border-left">
+									</form>
+								{% endif %}
+							</div>
+						{% endif %}
+                    </td>
                 </tr>
 
                 {% endfor %}
