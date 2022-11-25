@@ -4,23 +4,25 @@ from django.views import View
 from django.contrib.auth.hashers import check_password
 # Create your views here.
 def inicio(request):
-    return render(request,'base.html')
+    return render(request,'index.html')
     
-def catologo(request):
+def catalogo(request):
     carrito = request.session.get('carrito')
     if not carrito:
         request.session['carrito'] = {}
     juegos = None
     categorias = Categoria.getTodasCategorias()
     categoriaId = request.GET.get('categoria')
-    if categoriaId:
-        juegos = Juego.getTodosJuegosPorCategoria(categoriaId)
+    busqueda= request.GET.get('searchbar')
+    if busqueda:    
+        juegos = Juego.getJuegoBusqueda(categoriaId,busqueda)
     else:
-        juegos = Juego.getTodosJuegos();
-
+        juegos = Juego.getTodosJuegosPorCategoria(categoriaId)
+            
     data = {}
     data['juegos'] = juegos
     data['categorias'] = categorias
+    data['busqueda'] = busqueda
 
     print('Eres : ', request.session.get('nombreUsuario'))
     return render(request, 'catalogo.html', data)
@@ -48,4 +50,3 @@ def Pedido(request):
     pedidos = Pedido.getPedidosPorCliente(cliente)
     return render(request, 'pedido.html', {'pedidos' : pedidos})
     
-

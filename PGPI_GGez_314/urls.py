@@ -20,17 +20,18 @@ from GGez_App import views
 from django.conf import settings
 import django.views
 from GGez_App.signup import Signup
-from GGez_App.catalogo import Index
+from GGez_App.catalogo import Catalogo
 from GGez_App.login import Login, logout
 from django.conf.urls.static import static
 from GGez_App.views import Carrito
 
 
 urlpatterns = [
-    path('', Index.as_view(), name='inicio'),
+    path('', views.inicio, name='inicio'),
     path('admin/', admin.site.urls),
     path('media/<path>', django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
-    path('catalogo/', views.catologo, name='catalogo'),
+    path('cat/', Catalogo.as_view(), name='cat'),
+    path('catalogo/', views.catalogo, name='catalogo'),
     
     path('signup/', Signup.as_view(), name='signup'),
     path('login/', Login.as_view(), name='login'),
