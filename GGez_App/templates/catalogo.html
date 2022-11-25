@@ -1,4 +1,4 @@
-{% extends 'base.html' %}
+{% extends 'baseCatalogo.html' %}
 
 {% block content %}
 
@@ -13,10 +13,10 @@
 		<div class="col-lg-2 mx-auto">
 			<div class="list-group">
 
-				<a href="/" class="list-group-item list-group-item-action btn btn-outline-success">Todos los juegos</a>
+				<a href="/cat/" class="list-group-item list-group-item-action btn btn-outline-success">Todos los juegos</a>
 
 				{% for categoria in categorias %}
-				<a href="/?categoria={{categoria.id}}"
+				<a href="/catalogo/?categoria={{categoria.id}}"
 					class="list-group-item list-group-item-action btn btn-outline-success ">{{categoria.categoria}}</a>
 				{% endfor %}
 			</div>
@@ -76,11 +76,11 @@
 									</form>
 									{% endif %}
 							{% else %}
-							<div class="card-agotado">
-								<p class="card-agotado"><b>AGOTADO</b></p>
-							</div>
-		
+                <div class="card-agotado">
+                  <p class="card-agotado"><b>AGOTADO</b></p>
+                </div>
 							{% endif %}
+              
 							</div>
 		
 						</div>

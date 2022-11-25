@@ -3,8 +3,8 @@ from GGez_App.models import *
 from django.views import View
 from django.contrib import messages
 
-class Index(View):
-
+class Catalogo(View):
+    
     def post(self , request):
         juego = request.POST.get('juego')
         remove = request.POST.get('remove')
@@ -29,8 +29,9 @@ class Index(View):
             carrito[juego] = 1
 
         request.session['carrito'] = carrito
-        return redirect('inicio')
+        
+        return redirect('cat')
 
     def get(self , request):
-        return HttpResponseRedirect(f'/catalogo{request.get_full_path()[1:]}')
-
+        
+        return HttpResponseRedirect(f'/catalogo/')
