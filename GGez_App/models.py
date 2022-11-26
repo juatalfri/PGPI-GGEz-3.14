@@ -62,6 +62,18 @@ class Juego(models.Model):
         else:
             return Juego.objects.filter(Q(titulo__contains=texto) | Q(desarrollador__contains=texto));
 
+    @staticmethod
+    def getJuegosPrecio(minimo,maximo):
+        print(minimo)
+        if minimo == '':
+            minimo = 0.
+            print(minimo)
+        print(maximo)
+        if maximo == '':
+            maximo = 999999.
+            print(maximo)
+        return Juego.objects.filter(precio__range=(minimo,maximo))
+
 class Cliente(models.Model):
     # nombre = models.CharField(max_length=50)
     # apellidos = models.CharField(max_length=50)
