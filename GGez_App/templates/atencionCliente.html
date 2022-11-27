@@ -1,0 +1,71 @@
+{% extends 'baseInformacion.html' %}
+
+{% block content %}
+
+<html>
+<head>
+<style>
+.content {
+  border: 2px solid gray;
+  padding: 8px;
+  margin-inline: 5%;
+  border-radius: 10px;
+}
+
+h1 {
+  text-align: center;
+  text-transform: uppercase;
+  color: orange;
+}
+
+h1.p {
+  text-align: left;
+  text-indent: 50px;
+  text-align: justify;
+  letter-spacing: 3px;
+}
+
+a {
+  text-decoration: none;
+  color: orange;
+}
+</style>
+</head>
+<body>
+
+<br>
+<div class="content">
+  <h1>Atención al cliente</h1>
+  <p>
+	<b>¿Problemas con la compra?</b><br>
+	Por favor, póngase en contacto con nosotros a través de alguna de los siguientes medios:<br>
+	Correo: <a href="mailto:compra@ggez.com">compra@ggez.com</a><br>
+	Teléfono: <a href="tel:+123456789">123456789</a><br>
+	<b>Departamento legal</b><br>
+	Si tiene preguntas sobre asuntos legales, contáctanos en:<br>
+	Correo: <a href="mailto:legal@ggez.com">legal@ggez.com</a><br>
+	<b>Partners de Marketing</b><br>
+	¿Quiere trabajar con nosotros o tiene preguntas relacionadas sobre el negocio? Contáctanos en:<br>
+	Correo: <a href="mailto:marketing@ggez.com">marketing@ggez.com</a><br>
+	<b>Equipo de talento</b><br>
+	¿Buscando un nuevo trabajo? Póngase en contacto con nuestro equipo de Talento en:<br>
+	Correo: <a href="mailto:jobs@ggez.com">jobs@ggez.com</a><br>
+	<br>
+	<h3>Preguntas frecuentes</h3>
+	<b>¿Dónde está mi pedido?</b><br>
+	El siguimiento del pedido se encuentra en la ventana de pedidos. Encuentre su pedido por el identificador de pedido enviado por correo.<br>
+	<br>
+	<b>Información sobre devoluciones</b><br>
+	Toda la información sobre devoluciones se encuentra <a href="/politicaEnvio">aquí</a>.<br>
+	<br><b>Información sobre política de envío</b><br>
+	Toda la información sobre política de envío se encuentra <a href="/politicaEnvio">aquí</a>.<br>
+	<br><b>Información sobre política de privacidad</b><br>
+	Toda la información sobre política de privacidad se encuentra <a href="/politicaPrivacidad">aquí</a>.<br>
+  </p>
+</div>
+
+</body>
+</html>
+
+
+{% endblock %}

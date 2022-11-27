@@ -4,7 +4,7 @@ from django.views import View
 from django.contrib.auth.hashers import check_password
 # Create your views here.
 def inicio(request):
-    return render(request,'index.html')
+    return render(request,'inicio.html')
     
 def catalogo(request):
     carrito = request.session.get('carrito')
@@ -55,3 +55,12 @@ def Pedido(request):
     
 def politicaEnvio(request):
     return render(request,'politicaEnvio.html')
+
+def politicaPrivacidad(request):
+    return render(request,'politicaPrivacidad.html')
+
+def atencionCliente(request):
+    return render(request,'atencionCliente.html')
+
+def datosEmpresa(request):
+    return render(request,'datosEmpresa.html')
