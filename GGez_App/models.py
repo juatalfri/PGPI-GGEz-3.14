@@ -66,20 +66,20 @@ class Juego(models.Model):
     def getJuegosPrecio(minimo,maximo):
         print(minimo)
         if minimo == '':
-            minimo = 0.
+            minimo = 0.01
             print(minimo)
         print(maximo)
         if maximo == '':
-            maximo = 999999.
+            maximo = 999999.99
             print(maximo)
         return Juego.objects.filter(precio__range=(minimo,maximo))
 
 class Cliente(models.Model):
-    # nombre = models.CharField(max_length=50)
-    # apellidos = models.CharField(max_length=50)
+    nombre = models.CharField(max_length=50)
+    apellidos = models.CharField(max_length=50)
     nombreUsuario = models.CharField(max_length=50)
-    # telefono = models.CharField(max_length=10)
-    # correo = models.EmailField()
+    telefono = models.CharField(max_length=10)
+    correo = models.EmailField()
     contrasena = models.CharField(max_length=20)
     
     def registro(self):
@@ -102,9 +102,8 @@ class Cliente(models.Model):
             return False
     
 class Pedido(models.Model):
-    juego = models.ForeignKey(Juego, on_delete=models.CASCADE)
+    juegos = models.ManyToManyField(Juego)
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    cantidad = models.IntegerField(default=1)
     precio = models.IntegerField()
     fecha = models.DateField(default=timezone.now)
     direccion = models.CharField(max_length=50, default='', blank=True)
