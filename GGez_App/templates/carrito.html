@@ -67,10 +67,9 @@
             </tfoot>
         </table>
         <hr>
-        <form action="/checkOut/" class="col-2 " method="get">
-			{% csrf_token %}
-			<input type="submit" value="Confirmar pedido" class="btn btn-block btn-success border-left">
-		</form>
+        <div class="m-3 p-3">
+            <a href="/checkOut/" class="btn btn-outline-success border rounded col-lg-3 float-right"> Confirmar pedido </a>
+        </div>
    </div>
 </div>
 

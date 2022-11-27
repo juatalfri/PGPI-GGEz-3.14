@@ -13,4 +13,4 @@ class CheckOut(View):
         if request.session.get('carrito') == None:
             return HttpResponseRedirect(f'/carrito/')
         else:
-            return render(request, 'carrito.html')
+            return render(request, 'checkOut.html')
