@@ -2,6 +2,8 @@ from django.shortcuts import render, redirect, HttpResponseRedirect
 from GGez_App.models import *
 from django.views import View
 from django.contrib.auth.hashers import check_password
+from GGez_App.templatetags import carrito
+from GGez_App.templatetags.carrito import cantidad_carrito
 # Create your views here.
 def inicio(request):
     return render(request,'inicio.html')
@@ -36,19 +38,35 @@ def Carrito(request):
     return render(request, 'carrito.html', {'juegos' : juegos})
 
 def Checkout(request):
-    carrito = request.session.get('carrito')
-    juegos = Juego.getJuegosPorId(list(carrito.keys()))
-    direccion = request.POST.get('direccion')
-    telefono = request.POST.get('telefono')
-    cliente = request.session.get('cliente')
-    for juego in juegos:
-        pedido = Pedido(cliente=Cliente(id=cliente), juego=juego, precio=juego.precio, direccion=direccion, telefono=telefono, cantidad=carrito.get(str(juego.id)))
-        pedido.save()
+    carritoAux = request.session.get('carrito')
+    juegosAux = Juego.getJuegosPorId(list(carritoAux.keys()))
+    direccionAux = request.POST.get('direccion')
+    telefonoAux = request.POST.get('telefono')
+    
+    if request.session.get('cliente') == None:
+        clienteAux = clienteAnonimo()
+    else:
+        clienteAux = request.session.get('cliente')
+        
+    precioAux = carrito.precio_total_carrito(juegosAux, carritoAux)
+    pedidoAux = Pedido.objects.create(cliente=clienteAux, precio=precioAux, direccion=direccionAux, telefono=telefonoAux,)
+    pedidoAux.juegos.set(juegosAux)
+    pedidoAux.save()
+    
+    for j, c in carritoAux.items():
+        cantidadPedidoAux = cantidadPedido.objects.create(juego=Juego.getJuegoPorId(j).get(), cantidad=c, pedido=pedidoAux)
+        cantidadPedidoAux.save()
+    
+    for juego in juegosAux:
+        cantidadComprada = cantidad_carrito(juego, carritoAux)
+        juego.cantidad = juego.cantidad - cantidadComprada
+        juego.save(update_fields=['cantidad'])
+    
     request.session['carrito'] = {}
     
-    return redirect('carrito')
+    return redirect('catalogo')
 
-def Pedido(request):
+def pedido(request):
     cliente = request.session.get('cliente')
     pedidos = Pedido.getPedidosPorCliente(cliente)
     return render(request, 'pedido.html', {'pedidos' : pedidos})
@@ -56,6 +74,15 @@ def Pedido(request):
 def politicaEnvio(request):
     return render(request,'politicaEnvio.html')
 
+def clienteAnonimo():
+    if Cliente.getClientePorNombreUsuario('Anónimo') != False:
+        return Cliente.getClientePorNombreUsuario('Anónimo')
+    else:
+        cliente = Cliente(nombre='Anónimo', apellidos='Anónimo', nombreUsuario='Anónimo', telefono='000000000', correo='anónimo@gmail.com', contrasena='Anónimo')
+        cliente.save()
+        return cliente
+
+        
 def politicaPrivacidad(request):
     return render(request,'politicaPrivacidad.html')
 

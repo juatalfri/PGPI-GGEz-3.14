@@ -41,6 +41,9 @@ class Juego(models.Model):
         return self.titulo
     
     @staticmethod
+    def getJuegoPorId(idJuego):
+        return Juego.objects.filter(id=idJuego)
+    @staticmethod
     def getJuegosPorId(ids):
         return Juego.objects.filter(id__in=ids)
     
@@ -66,20 +69,20 @@ class Juego(models.Model):
     def getJuegosPrecio(minimo,maximo):
         print(minimo)
         if minimo == '':
-            minimo = 0.
+            minimo = 0.01
             print(minimo)
         print(maximo)
         if maximo == '':
-            maximo = 999999.
+            maximo = 999999.99
             print(maximo)
         return Juego.objects.filter(precio__range=(minimo,maximo))
 
 class Cliente(models.Model):
-    # nombre = models.CharField(max_length=50)
-    # apellidos = models.CharField(max_length=50)
+    nombre = models.CharField(max_length=50)
+    apellidos = models.CharField(max_length=50)
     nombreUsuario = models.CharField(max_length=50)
-    # telefono = models.CharField(max_length=10)
-    # correo = models.EmailField()
+    telefono = models.CharField(max_length=10)
+    correo = models.EmailField()
     contrasena = models.CharField(max_length=20)
     
     def registro(self):
@@ -102,10 +105,9 @@ class Cliente(models.Model):
             return False
     
 class Pedido(models.Model):
-    juego = models.ForeignKey(Juego, on_delete=models.CASCADE)
+    juegos = models.ManyToManyField(Juego)
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    cantidad = models.IntegerField(default=1)
-    precio = models.IntegerField()
+    precio = models.FloatField()
     fecha = models.DateField(default=timezone.now)
     direccion = models.CharField(max_length=50, default='', blank=True)
     telefono = models.CharField(max_length=50, default='', blank=True)
@@ -116,3 +118,17 @@ class Pedido(models.Model):
     @staticmethod
     def getPedidosPorCliente(idCliente):
         return Pedido.objects.filter(cliente=idCliente).order_by('-fecha')
+    @staticmethod
+    def getCantidadPedido(idPedido):
+        return cantidadPedido.objects.filter(Pedido=idPedido)
+    
+class cantidadPedido(models.Model):
+    juego = models.OneToOneField(Juego, on_delete=models.CASCADE)
+    cantidad = models.IntegerField()
+    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.juego.titulo + ": " + self.cantidad
+    
+    def crearTablaCantidadPedido(self):
+        self.save()
