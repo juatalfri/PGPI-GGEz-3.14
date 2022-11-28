@@ -6,7 +6,7 @@ from GGez_App.templatetags import carrito
 from GGez_App.templatetags.carrito import cantidad_carrito
 # Create your views here.
 def inicio(request):
-    return render(request,'index.html')
+    return render(request,'inicio.html')
     
 def catalogo(request):
     carrito = request.session.get('carrito')
@@ -74,8 +74,6 @@ def pedido(request):
 def politicaEnvio(request):
     return render(request,'politicaEnvio.html')
 
-# Metodos auxiliares
-
 def clienteAnonimo():
     if Cliente.getClientePorNombreUsuario('Anónimo') != False:
         return Cliente.getClientePorNombreUsuario('Anónimo')
@@ -85,3 +83,11 @@ def clienteAnonimo():
         return cliente
 
         
+def politicaPrivacidad(request):
+    return render(request,'politicaPrivacidad.html')
+
+def atencionCliente(request):
+    return render(request,'atencionCliente.html')
+
+def datosEmpresa(request):
+    return render(request,'datosEmpresa.html')
