@@ -123,7 +123,7 @@ class Pedido(models.Model):
         return cantidadPedido.objects.filter(Pedido=idPedido)
     
 class cantidadPedido(models.Model):
-    juego = models.OneToOneField(Juego, on_delete=models.CASCADE)
+    juego = models.ForeignKey(Juego, on_delete=models.CASCADE)
     cantidad = models.IntegerField()
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
     
