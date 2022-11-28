@@ -49,9 +49,13 @@ def Checkout(request):
         clienteAux = request.session.get('cliente')
         
     precioAux = carrito.precio_total_carrito(juegosAux, carritoAux)
-    pedidoAux = Pedido.objects.create(cliente=clienteAux, precio=precioAux, direccion=direccionAux, telefono=telefonoAux)
+    pedidoAux = Pedido.objects.create(cliente=clienteAux, precio=precioAux, direccion=direccionAux, telefono=telefonoAux,)
     pedidoAux.juegos.set(juegosAux)
     pedidoAux.save()
+    
+    for j, c in carritoAux.items():
+        cantidadPedidoAux = cantidadPedido.objects.create(juego=Juego.getJuegoPorId(j).get(), cantidad=c, pedido=pedidoAux)
+        cantidadPedidoAux.save()
     
     for juego in juegosAux:
         cantidadComprada = cantidad_carrito(juego, carritoAux)

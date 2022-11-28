@@ -41,6 +41,9 @@ class Juego(models.Model):
         return self.titulo
     
     @staticmethod
+    def getJuegoPorId(idJuego):
+        return Juego.objects.filter(id=idJuego)
+    @staticmethod
     def getJuegosPorId(ids):
         return Juego.objects.filter(id__in=ids)
     
@@ -104,7 +107,7 @@ class Cliente(models.Model):
 class Pedido(models.Model):
     juegos = models.ManyToManyField(Juego)
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
-    precio = models.IntegerField()
+    precio = models.FloatField()
     fecha = models.DateField(default=timezone.now)
     direccion = models.CharField(max_length=50, default='', blank=True)
     telefono = models.CharField(max_length=50, default='', blank=True)
@@ -115,3 +118,17 @@ class Pedido(models.Model):
     @staticmethod
     def getPedidosPorCliente(idCliente):
         return Pedido.objects.filter(cliente=idCliente).order_by('-fecha')
+    @staticmethod
+    def getCantidadPedido(idPedido):
+        return cantidadPedido.objects.filter(Pedido=idPedido)
+    
+class cantidadPedido(models.Model):
+    juego = models.OneToOneField(Juego, on_delete=models.CASCADE)
+    cantidad = models.IntegerField()
+    pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
+    
+    def __str__(self):
+        return self.juego.titulo + ": " + self.cantidad
+    
+    def crearTablaCantidadPedido(self):
+        self.save()
