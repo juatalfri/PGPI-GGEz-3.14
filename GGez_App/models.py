@@ -105,22 +105,39 @@ class Cliente(models.Model):
             return False
     
 class Pedido(models.Model):
+    
+    PENDIENTE = 'Pendiente'
+    EN_REPARTO = 'En reparto'
+    ENTREGADO = 'Entregado'
+    CANCELADO = 'Pedido cancelado'
+    
+    CHOICES = ((PENDIENTE, PENDIENTE),
+               (EN_REPARTO, EN_REPARTO),
+               (ENTREGADO, ENTREGADO),
+               (CANCELADO, CANCELADO))
+    
+    estado = models.CharField(choices=CHOICES, max_length=50, default=PENDIENTE)
     juegos = models.ManyToManyField(Juego)
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     precio = models.FloatField()
     fecha = models.DateField(default=timezone.now)
     direccion = models.CharField(max_length=50, default='', blank=True)
     telefono = models.CharField(max_length=50, default='', blank=True)
+    localizador = models.CharField(max_length=50, unique=True)
+    
+    def __str__(self):
+        return self.localizador
     
     def hacerPedido(self):
         self.save()
         
     @staticmethod
-    def getPedidosPorCliente(idCliente):
-        return Pedido.objects.filter(cliente=idCliente).order_by('-fecha')
+    def getPedidoPorLocalizador(localizadorPedido):
+        return Pedido.objects.filter(localizador=localizadorPedido)
+        
     @staticmethod
     def getCantidadPedido(idPedido):
-        return cantidadPedido.objects.filter(Pedido=idPedido)
+        return cantidadPedido.objects.filter(pedido=idPedido)
     
 class cantidadPedido(models.Model):
     juego = models.ForeignKey(Juego, on_delete=models.CASCADE)
@@ -128,7 +145,7 @@ class cantidadPedido(models.Model):
     pedido = models.ForeignKey(Pedido, on_delete=models.CASCADE)
     
     def __str__(self):
-        return self.juego.titulo + ": " + self.cantidad
+        return self.juego.titulo + ": " + str(self.cantidad)
     
     def crearTablaCantidadPedido(self):
         self.save()
