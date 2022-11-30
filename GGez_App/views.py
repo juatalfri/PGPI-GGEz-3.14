@@ -4,6 +4,10 @@ from django.views import View
 from django.contrib.auth.hashers import check_password
 from GGez_App.templatetags import carrito
 from GGez_App.templatetags.carrito import cantidad_carrito
+import random
+import string
+from numpy.random.mtrand import randint
+
 # Create your views here.
 def inicio(request):
     return render(request,'inicio.html')
@@ -42,14 +46,15 @@ def Checkout(request):
     juegosAux = Juego.getJuegosPorId(list(carritoAux.keys()))
     direccionAux = request.POST.get('direccion')
     telefonoAux = request.POST.get('telefono')
-    
+    localizadorAux = random.choice(string.ascii_letters)+random.choice(string.ascii_letters)+random.choice(string.ascii_letters)+'-'+str(randint(1000,100000))
+
     if request.session.get('cliente') == None:
         clienteAux = clienteAnonimo()
     else:
         clienteAux = request.session.get('cliente')
         
     precioAux = carrito.precio_total_carrito(juegosAux, carritoAux)
-    pedidoAux = Pedido.objects.create(cliente=clienteAux, precio=precioAux, direccion=direccionAux, telefono=telefonoAux,)
+    pedidoAux = Pedido.objects.create(cliente=clienteAux, precio=precioAux, direccion=direccionAux, telefono=telefonoAux, localizador = localizadorAux)
     pedidoAux.juegos.set(juegosAux)
     pedidoAux.save()
     
@@ -67,10 +72,18 @@ def Checkout(request):
     return redirect('catalogo')
 
 def pedido(request):
-    cliente = request.session.get('cliente')
-    pedidos = Pedido.getPedidosPorCliente(cliente)
-    return render(request, 'pedido.html', {'pedidos' : pedidos})
+    localizador = request.GET.get('searchbarPedido')
+    if localizador:
+        pedido = Pedido.getPedidoPorLocalizador(localizador).get()
+        relacion = list()
+        cantidadPedido = Pedido.getCantidadPedido(pedido.id)
+        for i in range(len(cantidadPedido)):
+            relacion.append(cantidadPedido[i])
     
+        return render(request, 'pedidos.html', {'relacion' : relacion, 'pedido': pedido})
+    else:
+        return render(request, 'pedidos.html')
+
 def politicaEnvio(request):
     return render(request,'politicaEnvio.html')
 

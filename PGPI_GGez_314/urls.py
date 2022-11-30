@@ -40,7 +40,7 @@ urlpatterns = [
     path('logout/', logout , name='logout'),
     path('carrito/', views.Carrito, name='carrito'),
     path('cart/', Cart.as_view(), name='cart'),
-    path('pedido/', views.Pedido, name='pedidos'),
+    path('pedidos/', views.pedido, name='pedidos'),
     path('politicaEnvio/', views.politicaEnvio),
     path('checkOut/', CheckOut.as_view()),
     path('politicaPrivacidad/', views.politicaPrivacidad),

@@ -16,8 +16,6 @@ class Login(View):
         cliente = Cliente.getClientePorNombreUsuario(nombreUsuario)
         mensajeError = None
         if cliente:
-            print(contrasena)
-            print(cliente.contrasena)
             flag = contrasena == cliente.contrasena
             if flag:
                 request.session['cliente'] = cliente.id
@@ -28,9 +26,9 @@ class Login(View):
                     Login.return_url = None
                     return redirect ('inicio')
             else:
-                mensajeError = 'Inválido1'
+                mensajeError = 'Contraseña incorrecta'
         else:
-            mensajeError = 'Inválido2'
+            mensajeError = 'Nombre de usuario no existe'
 
         return render (request, 'login.html', {'error': mensajeError})
 

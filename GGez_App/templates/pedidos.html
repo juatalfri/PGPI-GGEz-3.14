@@ -1,0 +1,65 @@
+ {% extends 'base.html' %}
+
+{% load bootstrap4 %}
+{% bootstrap_css %}
+{% block content %}
+{% load carrito %}
+{% load filtros %}
+<div class="container">
+   <div class="border rounded p-4 m-4">
+        <p class="display-4 pl-4 ml-4">Tu pedido</p>
+        <hr>
+        <nav class="barraPedido one-edge-shadow navbar navbar-light sticky-top navbar navbar-expand-lg text-black" style="background-color: transparent; 	width: 50%;">
+        <form class="collapse navbar-collapse" id="navbarSupportedContent" method="GET">
+      		<ul class="navbar-nav mr-auto">
+				<li id="search-bar" class="col-lg-12">
+        		  <input type="search" name="searchbarPedido" class="form-control" placeholder="Buscar pedido por localizador"/>
+				</li>
+				<li id="search-button">
+		  			<input class="btn btn-primary" type="submit" value="Buscar Pedido"></input>
+				</li>
+     		</ul>
+     	</form>
+     	  </nav>
+
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Localizador</th>
+                    <th>Carátulas</th>
+                    <th>Productos</th>
+                    <th>Cantidad</th>
+                    <th>Precio por unidad</th>
+                    <th>Fecha del pedido</th>
+                    <th>Estado</th>
+                    <th>Precio total</th>
+                </tr>
+            </thead>
+            <tbody>
+				{% for r in relacion %}
+                <tr>
+						<td>{{pedido.localizador}}</td>
+	                    <td>
+                         <img class="card-img-top" src="{{MEDIA_URL}}{{r.juego.caratula}}" alt="Card image cap">
+						</td>
+	                    <td>{{r.juego.titulo}}</td>
+	                    <td>{{r.cantidad}}</td>
+	                    <td>{{r.juego.precio|divisa}}</td>
+	                    <td>{{pedido.fecha}}</td>
+	                    <td>{{pedido.estado}}</td>
+	                    <td>{{pedido.precio|divisa}}</td>
+                </tr>
+                {% endfor %}             
+            </tbody>
+
+        </table>
+       
+   </div>
+</div>
+
+
+
+
+
+{% endblock %}
