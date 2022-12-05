@@ -61,7 +61,9 @@
 						<div juego="card mx-juegos mb-3" id={{juego.id}} style="width: 18rem;">
 							<img class="card-img-top" src="{{MEDIA_URL}}{{juego.caratula}}" alt="Card image cap">
 							<div class="card-body">
-								<p class="card-title">{{juego.titulo}}</p>
+								<a href="/fichaJuego/?juego={{juego.id}}">
+									<p class="card-title">{{juego.titulo}}</p>
+								</a>
 								<p class="card-text"><b>{{juego.precio|divisa}}</b></p>
 							</div>
 		

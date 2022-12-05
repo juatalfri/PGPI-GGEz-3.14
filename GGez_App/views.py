@@ -94,7 +94,11 @@ def clienteAnonimo():
         cliente = Cliente(nombre='Anónimo', apellidos='Anónimo', nombreUsuario='Anónimo', telefono='000000000', correo='anónimo@gmail.com', contrasena='Anónimo')
         cliente.save()
         return cliente
-
+    
+def fichaJuego(request):
+    juegoId = request.GET.get('juego')
+    juego = Juego.getJuegoPorId(juegoId).get()
+    return render(request, 'fichaJuego.html', {'juego' : juego})
         
 def politicaPrivacidad(request):
     return render(request,'politicaPrivacidad.html')
