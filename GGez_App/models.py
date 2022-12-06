@@ -1,5 +1,4 @@
 from django.db import models
-from unittest.util import _MAX_LENGTH
 from django.template.defaultfilters import default
 from django.utils import timezone
 from django.db.models import Q
@@ -77,6 +76,18 @@ class Juego(models.Model):
             print(maximo)
         return Juego.objects.filter(precio__range=(minimo,maximo))
 
+class DatosEnvio(models.Model):
+    direccion = models.CharField(max_length=100)
+    ciudad = models.CharField(max_length=100)
+    codigoPostal = models.CharField(max_length=100)    
+    provincia = models.CharField(max_length=100)
+    pais = models.CharField(max_length=100)
+
+class DatosPago(models.Model):
+    numeroTarjeta = models.IntegerField()
+    fechaCaducidad = models.CharField(max_length=5)
+    codigoSeguridad = models.IntegerField()
+
 class Cliente(models.Model):
     nombre = models.CharField(max_length=50)
     apellidos = models.CharField(max_length=50)
@@ -84,6 +95,8 @@ class Cliente(models.Model):
     telefono = models.CharField(max_length=10)
     correo = models.EmailField()
     contrasena = models.CharField(max_length=20)
+    datosEnvio = models.OneToOneField(DatosEnvio, on_delete=models.CASCADE, null=True)
+    datosPago = models.OneToOneField(DatosPago, on_delete=models.CASCADE, null=True)
     
     def registro(self):
         self.save()
@@ -101,6 +114,13 @@ class Cliente(models.Model):
     def getClientePorNombreUsuario(nombreUsuario):
         try:
             return Cliente.objects.get(nombreUsuario=nombreUsuario)
+        except:
+            return False
+        
+    @staticmethod
+    def getClientePorId(idUsuario):
+        try:
+            return Cliente.objects.get(id=idUsuario)
         except:
             return False
     
