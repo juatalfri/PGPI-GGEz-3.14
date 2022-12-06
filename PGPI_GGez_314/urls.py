@@ -21,11 +21,13 @@ from django.conf import settings
 import django.views
 from GGez_App.signup import Signup
 from GGez_App.catalogo import Catalogo
+from GGez_App.perfil import Perfil
 from GGez_App.carrito import Cart
 from GGez_App.login import Login, logout
 from django.conf.urls.static import static
 from GGez_App.views import Carrito
 from GGez_App.checkOut import CheckOut
+from ctypes.test.test_pickling import name
 
 
 urlpatterns = [
@@ -46,4 +48,5 @@ urlpatterns = [
     path('politicaPrivacidad/', views.politicaPrivacidad),
     path('atencionCliente/', views.atencionCliente),
     path('sobreNosotros/', views.datosEmpresa),
+    path('perfil/<idUsuario>', Perfil.as_view(), name='perfil'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
