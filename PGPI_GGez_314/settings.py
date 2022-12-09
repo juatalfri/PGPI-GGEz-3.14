@@ -142,3 +142,12 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 MEDIA_ROOT = os.path.join(BASE_DIR,'media')
 MEDIA_URL = '/media/'
+
+# Email Config
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'PGPI.314.2022@gmail.com'
+EMAIL_HOST_PASSWORD = 'gpchnvilsevrthsn' # En un entorno de producción real, se realizaria con variables de entorno
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True

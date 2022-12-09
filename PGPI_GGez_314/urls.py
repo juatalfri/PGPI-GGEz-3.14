@@ -36,7 +36,7 @@ urlpatterns = [
     path('media/<path>', django.views.static.serve, {'document_root': settings.MEDIA_ROOT}),
     path('cat/', Catalogo.as_view(), name='cat'),
     path('catalogo/', views.catalogo, name='catalogo'),
-    path('fichaJuego/', views.fichaJuego, name='catalogo'),    
+    path('fichaJuego/', views.fichaJuego, name='detalles'),    
     path('signup/', Signup.as_view(), name='signup'),
     path('login/', Login.as_view(), name='login'),
     path('logout/', logout , name='logout'),
