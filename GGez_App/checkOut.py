@@ -2,22 +2,32 @@ from django.shortcuts import render , redirect , HttpResponseRedirect
 from GGez_App.models import *
 from django.views import View
 from django.contrib import messages
-from GGez_App import views
+from GGez_App import views, carrito
 from StripeAPI import *
 from GGez_App.signup import Signup
 from pickle import NONE, FALSE
+from numpy.random.mtrand import randint
 import random
+import string
+from GGez_App.templatetags import carrito
+from GGez_App.templatetags.carrito import precio_total
+from GGez_App.views import clienteAnonimo
+
 
 class CheckOut(View):
     
     def post(self , request):
         mensajeError = None
-        cliente = None
-        ids = list(request.session.get('carrito').keys())
+        cliente = request.session.get("cliente")
+        carritoAux = request.session.get('carrito')
+        ids = carritoAux.keys()
         juegosAux = Juego.getJuegosPorId(ids)
-        postData = request.POST
-        precioTotal = postData.get('precioTotal')
+        precioTotal = carrito.precio_total_carrito(juegosAux, carritoAux)
+
+        postData = request.POST        
+        
         #Datos de usuario
+        
         nombreUsuarioAux = postData.get('nombreUsuario')
         nombreAux = postData.get('nombre')
         apellidosAux = postData.get('apellidos')
@@ -35,7 +45,44 @@ class CheckOut(View):
         numeroTarjetaAux = postData.get('numeroTarjeta')
         fechaCaducidadAux = postData.get('fechaCaducidad')
         codigoSeguridadAux = postData.get('codigoSeguridad')
+        
+        localizadorAux = random.choice(string.ascii_letters)+random.choice(string.ascii_letters)+random.choice(string.ascii_letters)+'-'+str(randint(0, 9)) + str(randint(0, 9)) + str(randint(0, 9)) + str(randint(0, 9))
+        
         #Registro cliente
+        # si el cliente no está registrado, cliente = anónimo    
+        if cliente==None:
+            cliente = clienteAnonimo()
+            if self.datosVacios(request):
+                mensajeError = self.datosVaciosError(request)
+                return render(request, 'checkOut.html', {'error': mensajeError, 'noCliente': True})                
+            else:
+                datosEnvioAux = DatosEnvio(direccion = direccionAux,
+                                           ciudad = ciudadAux,
+                                           codigoPostal = codigoPostalAux,   
+                                           provincia = provinciaAux,
+                                           pais = paisAux)
+                
+                datosPagoAux = DatosPago(numeroTarjeta = numeroTarjetaAux,
+                                         fechaCaducidad = fechaCaducidadAux,
+                                         codigoSeguridad = codigoSeguridadAux)
+                cliente.datosEnvio = datosEnvioAux
+                cliente.datosPago = datosPagoAux
+                
+            pedido = Pedido.objects.create(cliente=cliente, precio=precioTotal, direccion="calle: " + direccionAux + ", ciudad: " + ciudadAux
+                                + ", código postal: " + codigoPostalAux + ", provincia: " + provinciaAux + ", pais: " + paisAux, telefono=cliente.telefono, 
+                                localizador=localizadorAux)
+            pedido.juegos.set(juegosAux)
+            pedido.save()
+            return render(request, 'inicio.html')
+                
+        else:
+            
+            cliente = Cliente.getClientePorId(request.session.get("cliente"))
+            
+            return
+        
+        
+        print("datosRegistrosVacios:" + str(not self.datosRegistroVacios(request)))
         if not self.datosRegistroVacios(request):
             cliente = Cliente(
                 nombre=nombreAux,
@@ -50,17 +97,20 @@ class CheckOut(View):
             else:
                 cliente.registro()
         localizadorAux = None
+        
+        print("datosVacios and not postData.get('notPersistDataBase'): " + str(self.datosVacios(request) and not postData.get('notPersistDataBase')) )      
         if self.datosVacios(request) and not postData.get('notPersistDataBase'):
             mensajeError = self.datosVaciosError(request)
             if mensajeError != None:
                 mensajeError = "Si quiere persistir los datos y no está registrado, debe añadir al menos lo siguientes campos obligatorios: " + mensajeError
                 return render(request, 'checkOut.html', {'error': mensajeError})
+        print("notPersistDataBase, cliente=None, notself.datosVacios: " + str(postData.get('notPersistDataBase') and cliente == None and not self.datosVacios(request)))
         if postData.get('notPersistDataBase') and cliente == None and not self.datosVacios(request):
             clienteAux = None
             if Cliente.getClientePorNombreUsuario("Anónimo") == None:
                 clienteAux = views.clienteAnonimo()
-            localizadorAux = "4n0n1m0" + random.randint(0, 99999999999) + random.randint(0, 99999999999) + random.randint(0, 99999999999) + random.randint(0, 99999999999)
-            pedido = Pedido(juegos=juegosAux, cliene=clienteAux, precio=precioTotal, direccion="calle: " + direccionAux + ", ciudad: " + ciudadAux
+            localizadorAux = "4n0n1m0" + str(randint(0, 9)) + str(randint(0, 9)) + str(randint(0, 9)) + str(randint(0, 9))
+            pedido = Pedido(juegos=juegosAux, cliente=clienteAux, precio=precioTotal, direccion="calle: " + direccionAux + ", ciudad: " + ciudadAux
                                 + ", código postal: " + codigoPostalAux + ", provincia: " + provinciaAux + ", pais: " + paisAux, telefono=telefonoAux, 
                                 localizador=localizadorAux)
             pedido.save()
@@ -89,11 +139,16 @@ class CheckOut(View):
             cargos.create_charge(precioTotal, cliente, tarjeta)
             return render(request, 'inicio.html')
     
-    def get(self, request, idUsuario):
-        cliente = Cliente.getClientePorId(idUsuario)
+    def get(self, request):
+        idCliente = request.session.get('cliente')
+        cliente = Cliente.getClientePorId(idCliente)
+        carritoAux = request.session.get('carrito')
+        ids = carritoAux.keys()
+        juegosAux = Juego.getJuegosPorId(ids)
+        precioTotal = carrito.precio_total_carrito(juegosAux, carritoAux)
         if request.session.get('carrito') == None:
             return HttpResponseRedirect(f'/carrito/')
-        elif cliente and request.session.get('carrito'):
+        elif cliente or cliente==clienteAnonimo() and request.session.get('carrito'):
             return render(request, 'checkOut.html', {'cliente' : cliente, 'noCliente': False})
         else:
             return render(request, 'checkOut.html', {'noCliente': True})
@@ -108,12 +163,12 @@ class CheckOut(View):
         #Datos de pago
         numeroTarjetaAux = postData.get('numeroTarjeta')
         fechaCaducidadAux = postData.get('fechaCaducidad')
-        if  direccionAux == None or ciudadAux == None or codigoPostalAux == None or provinciaAux == None or paisAux == None or numeroTarjetaAux == None or fechaCaducidadAux == None:
+        if  direccionAux == '' or ciudadAux == '' or codigoPostalAux == '' or provinciaAux == '' or paisAux == '' or numeroTarjetaAux == '' or fechaCaducidadAux == '':
             return True
         else:
             return False
     def datosVaciosError(self, request):
-        mensajeError = None
+        mensajeError = ''
         postData = request.POST
         #Datos de envío
         direccionAux = postData.get('direccion')
@@ -124,20 +179,21 @@ class CheckOut(View):
         #Datos de pago
         numeroTarjetaAux = postData.get('numeroTarjeta')
         fechaCaducidadAux = postData.get('fechaCaducidad')
-        if direccionAux == None:
+        if direccionAux == '':
             mensajeError = mensajeError + "Dirección, "
-        if ciudadAux == None:
+        if ciudadAux == '':
             mensajeError = mensajeError + "Ciudad, "
-        if codigoPostalAux == None:
+        if codigoPostalAux == '':
             mensajeError = mensajeError + "Código postal, "
-        if provinciaAux == None:
+        if provinciaAux == '':
             mensajeError = mensajeError + "Provincia, "
-        if paisAux == None:
+        if paisAux == '':
             mensajeError = mensajeError + "País, "
-        if numeroTarjetaAux == None:
+        if numeroTarjetaAux == '':
             mensajeError = mensajeError + "Número de tarjeta, "
-        if fechaCaducidadAux == None:
+        if fechaCaducidadAux == '':
             mensajeError = mensajeError + "Fecha de caducidad de la tarjeta"
+        mensajeError= "No puedes dejar este campo/s en blanco: " + mensajeError 
         return mensajeError
     def datosRegistroVacios(self, request):
         postData = request.POST

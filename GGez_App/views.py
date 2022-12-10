@@ -48,7 +48,7 @@ def Checkout(request):
     juegosAux = Juego.getJuegosPorId(list(carritoAux.keys()))
     direccionAux = request.POST.get('direccion')
     telefonoAux = request.POST.get('telefono')
-    localizadorAux = random.choice(string.ascii_letters)+random.choice(string.ascii_letters)+random.choice(string.ascii_letters)+'-'+str(randint(1000,100000))
+    localizadorAux = random.choice(string.ascii_letters)+random.choice(string.ascii_letters)+random.choice(string.ascii_letters)+'-'+str(randint(0, 9)) + str(randint(0, 9)) + str(randint(0, 9)) + str(randint(0, 9))
 
     if request.session.get('cliente') == None:
         clienteAux = clienteAnonimo()
