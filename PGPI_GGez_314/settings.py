@@ -11,7 +11,6 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
-from decouple import config
 from django.conf import settings
 import stripe
 import os
@@ -28,8 +27,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-*=3-q85hl!2139kz4m%f9m3u-l3q#30oc9)d884d3!x@4ht0^u'
-STRIPE_API_KEY = config("sk_test_51MBKK5ALW1DeTqxrJPSjsa2jAya84tZOVa7HqdvBSUKCujyG0sFsReNtJgfVd7m5GB7PUPp48MvsrW08LiY3EXLB00o2YCBZw3")
-
+STRIPE_API_KEY = "sk_test_51MBKK5ALW1DeTqxrJPSjsa2jAya84tZOVa7HqdvBSUKCujyG0sFsReNtJgfVd7m5GB7PUPp48MvsrW08LiY3EXLB00o2YCBZw3"
 stripe.api_key = settings.STRIPE_API_KEY
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
