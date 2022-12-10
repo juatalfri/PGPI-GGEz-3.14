@@ -2,7 +2,7 @@
 
 {% block content %}
 {% load carrito %}
-
+{% load filtros %}
   <div class="container">
     <div class="p-3 m-3">
         <div class="col-lg-5 rounded mx-auto border pt-4">
@@ -22,16 +22,82 @@
                     {{error}}
                 </div>
                 {% endif %}
-                <div class="form-group">
-                    <label for="direccion"> Dirección </label>
-                    <input required name="direccion" id="direccion" class="form-control-sm form-control">
+				{% if noCliente %}
+				
+				<div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="text-right">Datos de Cliente</h3>
                 </div>
-
-                <div class="form-group">
-                    <label for="telefono"> Teléfono </label>
-                    <input required name="telefono" id="telefono" class="form-control-sm form-control">
+				
+				<div class="row mt-2">
+                    <div class="col-md-6"><label class="labels">Nombre de Usuario</label><input type="text" name="nombreUsuario" class="form-control"></div>
+                    <div class="col-md-6"><label class="labels">Nombre</label><input type="text" name="nombre" class="form-control"></div>
+                    <div class="col-md-6"><label class="labels">Apellidos</label><input type="text" name="apellidos" class="form-control"></div>
+                    <div class="col-md-6"><label class="labels">Correo</label><input type="text" name="correo" class="form-control"></div>
+                    <div class="col-md-6"><label class="labels">Número de Teléfono</label><input type="text" name="telefono" class="form-control"></div>
+					<div class="col-md-6"><label class="labels">Contraseña</label><input type="text" name="contrasena" class="form-control"></div>
+					<div class="col-md-6"><label class="labels">Repita su contraseña</label><input type="text" name="contrasena" class="form-control"></div>
                 </div>
-
+					
+					<div class="d-flex justify-content-between align-items-center mb-3">
+                    	<h3 class="text-right">Datos de Envío</h3>
+                	</div>
+                
+               		<div class="row mt-3">
+                    	<div class="col-md-6"><label class="labels">Dirección</label><input type="text" name="direccion" class="form-control"></div>
+                    	<div class="col-md-6"><label class="labels">Ciudad</label><input type="text" name="ciudad" class="form-control"></div>
+                    	<div class="col-md-6"><label class="labels">Código Postal</label><input type="text" name="codigoPostal" class="form-control"></div>
+                    	<div class="col-md-6"><label class="labels">Provincia</label><input type="text" name="provincia" class="form-control"></div>
+                    	<div class="col-md-6"><label class="labels">País</label><input type="text" name="pais" class="form-control"></div>
+					</div>
+                	<br>
+                	<div class="d-flex justify-content-between align-items-center mb-3">
+                    	<h3 class="text-right">Datos de Pago</h3>
+                	</div>
+                	<div class="row mt-3">
+                    	<div class="col-md-6"><label class="labels">Número de Tarjeta</label><input type="text" name="numeroTarjeta" class="form-control"></div>
+                    	<div class="col-md-6"><label class="labels">Fecha de Caducidad</label><input type="text" name="fechaCaducidad" class="form-control"></div>
+						<div class="col-md-6"><label class="labels">Código de seguridad</label><input type="text" name="codigoSeguridad" class="form-control"></div>
+						<div class="col-md-6"><label class="labels">Precio a pagar: </label><input type="text" name="precioTotal" class="form-control" value="{{ juegos|precio_total_carrito:request.session.carrito|floatformat:2|divisa }}" readonly></div>
+                	</div>
+				{% else %}
+				
+				<div class="d-flex justify-content-between align-items-center mb-3">
+                    <h3 class="text-right">Datos de Cliente</h3>
+                </div>
+				
+				<div class="row mt-2">
+                    <div class="col-md-6"><label class="labels">Nombre de Usuario</label><input type="text" name="nombreUsuario" class="form-control" value="{{ cliente.nombreUsuario }}" readonly></div>
+                    <div class="col-md-6"><label class="labels">Nombre</label><input type="text" name="nombre" class="form-control" value="{{ cliente.nombre }}" readonly></div>
+                    <div class="col-md-6"><label class="labels">Apellidos</label><input type="text" name="apellidos" class="form-control" value="{{ cliente.apellidos }}" readonly></div>
+                    <div class="col-md-6"><label class="labels">Correo</label><input type="text" name="correo" class="form-control" value="{{ cliente.correo }}" readonly></div>
+                    <div class="col-md-6"><label class="labels">Número de Teléfono</label><input type="text" name="telefono" class="form-control" value="{{ cliente.telefono }}" readonly></div>                    
+                </div>
+					<div class="d-flex justify-content-between align-items-center mb-3">
+                    	<h3 class="text-right">Datos de Envío</h3>
+                	</div>
+                
+               		<div class="row mt-3">
+                    	<div class="col-md-6"><label class="labels">Dirección</label><input type="text" name="direccion" class="form-control" value="{{ cliente.datosEnvio.direccion }}"></div>
+                    	<div class="col-md-6"><label class="labels">Ciudad</label><input type="text" name="ciudad" class="form-control" value="{{ cliente.datosEnvio.ciudad }}"></div>
+                    	<div class="col-md-6"><label class="labels">Código Postal</label><input type="text" name="codigoPostal" class="form-control" value="{{ cliente.datosEnvio.codigoPostal }}"></div>
+                    	<div class="col-md-6"><label class="labels">Provincia</label><input type="text" name="provincia" class="form-control" value="{{ cliente.datosEnvio.provincia }}"></div>
+                    	<div class="col-md-6"><label class="labels">País</label><input type="text" name="pais" class="form-control" value="{{ cliente.datosEnvio.pais }}"></div>
+					</div>
+                	<br>
+                	<div class="d-flex justify-content-between align-items-center mb-3">
+                    	<h3 class="text-right">Datos de Pago</h3>
+                	</div>
+                	<div class="row mt-3">
+                    	<div class="col-md-6"><label class="labels">Número de Tarjeta</label><input type="text" name="numeroTarjeta" class="form-control" value="{{ cliente.datosPago.numeroTarjeta }}"></div>
+                    	<div class="col-md-6"><label class="labels">Fecha de Caducidad</label><input type="text" name="fechaCaducidad" class="form-control" value="{{ cliente.datosPago.fechaCaducidad }}"></div>
+						<div class="col-md-6"><label class="labels">Código de seguridad</label><input type="text" name="codigoSeguridad" class="form-control"></div>
+						<div class="col-md-6"><label class="labels">Precio a pagar: </label><input type="text" name="precioTotal" class="form-control" value="{{ juegos|precio_total_carrito:request.session.carrito|floatformat:2|divisa }}" readonly></div>
+                	</div>
+                	
+                	<div class="col-md-6"><label class="labels">Mantener datos de envio y pago</label><input type="checkbox" name="persist" class="form-control"></div>
+                	<div class="col-md-6"><label class="labels">No persistir ningún dato</label><input type="checkbox" name="notPersistDataBase" class="form-control"></div>
+				{% endif %}
+               
                 <button type="submit" class="btn btn-sm btn-success col-lg-12"> Pagar </button>
 
             </form>

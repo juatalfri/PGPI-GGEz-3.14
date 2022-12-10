@@ -42,6 +42,8 @@ def Carrito(request):
     return render(request, 'carrito.html', {'juegos' : juegos})
 
 def Checkout(request):
+    ids = list(request.session.get('carrito').keys())
+    juegos = Juego.getJuegosPorId(ids)
     carritoAux = request.session.get('carrito')
     juegosAux = Juego.getJuegosPorId(list(carritoAux.keys()))
     direccionAux = request.POST.get('direccion')
@@ -69,7 +71,7 @@ def Checkout(request):
     
     request.session['carrito'] = {}
     
-    return redirect('catalogo')
+    return render(request, 'checkOut.html', {'juegos' : juegos})
 
 def pedido(request):
     localizador = request.GET.get('searchbarPedido')

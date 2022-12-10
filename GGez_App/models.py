@@ -2,6 +2,7 @@ from django.db import models
 from django.template.defaultfilters import default
 from django.utils import timezone
 from django.db.models import Q
+from argparse import OPTIONAL
 
 
 class Categoria(models.Model):
@@ -85,7 +86,7 @@ class DatosEnvio(models.Model):
 
 class DatosPago(models.Model):
     numeroTarjeta = models.IntegerField()
-    fechaCaducidad = models.CharField(max_length=5)
+    fechaCaducidad = models.CharField(max_length=6)
     codigoSeguridad = models.IntegerField()
 
 class Cliente(models.Model):
@@ -97,6 +98,7 @@ class Cliente(models.Model):
     contrasena = models.CharField(max_length=20)
     datosEnvio = models.OneToOneField(DatosEnvio, on_delete=models.CASCADE, null=True)
     datosPago = models.OneToOneField(DatosPago, on_delete=models.CASCADE, null=True)
+    clienteStripeId = models.IntegerField(null=True)
     
     def registro(self):
         self.save()
@@ -141,8 +143,8 @@ class Pedido(models.Model):
     cliente = models.ForeignKey(Cliente, on_delete=models.CASCADE)
     precio = models.FloatField()
     fecha = models.DateField(default=timezone.now)
-    direccion = models.CharField(max_length=50, default='', blank=True)
-    telefono = models.CharField(max_length=50, default='', blank=True)
+    direccion = models.CharField(max_length=1000, default='', blank=True)
+    telefono = models.CharField(max_length=20, default='', blank=True)
     localizador = models.CharField(max_length=50, unique=True)
     
     def __str__(self):
