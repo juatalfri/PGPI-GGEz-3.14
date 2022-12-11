@@ -41,35 +41,34 @@ class Signup (View):
             return redirect('inicio')
         else:
             data = {
-                'error': mensajeError,
+                'errores': mensajeError,
                 'values': value
             }
             return render(request, 'signup.html', data)
   
     def validarCliente(self, cliente, contrasena, contrasena2):
-        mensajeError = ''
+        listaErrores=[]
         if not cliente.nombre:
-            mensajeError = mensajeError +  " |ERROR: Introduce tu nombre.|"
+            listaErrores.append("Introduce tu nombre.")
         if len(cliente.nombre) < 3:
-            mensajeError = mensajeError + ' |ERROR: El nombre debe tener al menos 3 caracteres.|'
+            listaErrores.append("El nombre debe tener al menos 3 caracteres.")
         if not cliente.apellidos:
-            mensajeError = mensajeError + ' |ERROR: Introduce tus apellidos.'
+            listaErrores.append("Introduce tus apellidos.")
         if len(cliente.apellidos) < 3:
-            mensajeError = mensajeError + ' |ERROR: Los apellidos deben tener al menos 3 caracteres.|'
+            listaErrores.append("Los apellidos deben tener al menos 3 caracteres.")
         if not cliente.telefono:
-            mensajeError = mensajeError + ' |ERROR: Introduce tu teléfono.|'
+            listaErrores.append("Introduce tu teléfono.")
         if len(cliente.telefono) < 9:
-            mensajeError = mensajeError + ' |ERROR: El telefono debe tener al menos 9 digitos.|'
+            listaErrores.append("El telefono debe tener al menos 9 digitos.")
         if len(cliente.contrasena) < 5:
-            mensajeError = mensajeError + ' |ERROR: La contraseña debe tener al menos 5 caracteres.|'
+            listaErrores.append("La contraseña debe tener al menos 5 caracteres.")
         if contrasena != contrasena2:
-            mensajeError = mensajeError + ' |ERROR: Las contraseñas deben ser iguales.|'
+            listaErrores.append("Las contraseñas deben ser iguales.")
         if len(cliente.correo) < 5:
-            mensajeError = mensajeError + ' |ERROR: El correo debe tener más de 5 caracteres.|'
+            listaErrores.append("El correo debe tener más de 5 caracteres.")
         if not cliente.nombreUsuario:
-            mensajeError = mensajeError + ' |ERROR: Introduce tu nombre de usuario.|'
+            listaErrores.append("Introduce tu nombre de usuario.")
         if cliente.existe():
-            mensajeError = mensajeError + ' |ERROR:  Nombre de usuario ya registrado.|'
+            listaErrores.append("Nombre de usuario ya registrado.")
   
-        print(mensajeError)
-        return mensajeError
+        return listaErrores

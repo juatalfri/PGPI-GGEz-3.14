@@ -23,11 +23,11 @@
                 
                 {% csrf_token %}
 
-                {% if error%}
+               {% for error in errores %}
                 <div class="alert alert-danger" role="alert">
                     {{error}}
                 </div>
-                {% endif %}
+                {% endfor %}
 
                 <div class="form-group">
                     <label for="">Nombre</label>
