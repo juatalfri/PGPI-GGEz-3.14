@@ -81,14 +81,16 @@ def Checkout(request):
 def pedido(request):
     localizador = request.GET.get('searchbarPedido')
     if localizador:
-        pedido = Pedido.getPedidoPorLocalizador(localizador).get()
-        print(pedido)
-        relacion = list()
-        cantidadPedido = Pedido.getCantidadPedido(pedido.id)
-        for i in range(len(cantidadPedido)):
-            relacion.append(cantidadPedido[i])
-        print(cantidadPedido)
-        return render(request, 'pedidos.html', {'relacion' : relacion, 'pedido': pedido})
+        if not Pedido.getPedidoPorLocalizador(localizador):
+            mensajeError = "El localizador que ha introducido no corresponde a ningún pedido registrado en nuestro sistema"
+            return render(request, 'pedidos.html', {'error':mensajeError})
+        else:
+            pedido = Pedido.getPedidoPorLocalizador(localizador).get()
+            relacion = list()
+            cantidadPedido = Pedido.getCantidadPedido(pedido.id)
+            for i in range(len(cantidadPedido)):
+                relacion.append(cantidadPedido[i])
+            return render(request, 'pedidos.html', {'relacion' : relacion, 'pedido': pedido})
     else:
         return render(request, 'pedidos.html')
 

@@ -21,7 +21,11 @@
      		</ul>
      	</form>
      	  </nav>
-
+		{%if error %}
+		<div class="alert alert-danger" role="alert">
+			{{error}}
+        </div>
+		{% endif %}
 
         <table class="table">
             <thead>
@@ -34,6 +38,7 @@
                     <th>Fecha del pedido</th>
                     <th>Estado</th>
                     <th>Precio total</th>
+					<th>Método de pago</th>
                 </tr>
             </thead>
             <tbody>
@@ -49,6 +54,12 @@
 	                    <td>{{pedido.fecha}}</td>
 	                    <td>{{pedido.estado}}</td>
 	                    <td>{{pedido.precio|divisa}}</td>
+						{%if pedido.contrareembolso %}
+						<td>Contrareembolso</td>
+						{% else %}
+						<td>Con tarjeta</td>
+						{% endif %}
+							
                 </tr>
                 {% endfor %}             
             </tbody>
