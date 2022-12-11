@@ -47,8 +47,8 @@ class CheckOut(View):
             if len(numeroTarjetaAux) != 16:
                 mensajeError = "Debe introducir un número válido de tarjeta (sin separar por espacios)"
                 listaErrores.append(mensajeError)
-            if len(fechaCaducidadAux) != 6 or (0 > int(fechaCaducidadAux[0:2:1]) > 32) or (0 > int(fechaCaducidadAux[2:4:1]) > 13) or (int(fechaCaducidadAux[4:6:1]) < 10):
-                mensajeError = "La fecha de caducidad debe seguir el siguiente formato 'ddmmyy' de una fecha válida (los dos dígitos del día y del mes y los dos últimos dígitos del año)"
+            if len(fechaCaducidadAux) != 5 or (0 > int(fechaCaducidadAux[0:2]) > 12) or (0 > int(fechaCaducidadAux[3:5]) < 22):
+                mensajeError = "La fecha de caducidad debe seguir el siguiente formato 'mm/yy' de una fecha válida (los dos dígitos del mes y los dos últimos dígitos del año)"
                 listaErrores.append(mensajeError)
             if len(codigoSeguridadAux) != 3:
                 mensajeError = "Debe introducir un código de seguridad válido de una tarjeta"
@@ -81,7 +81,7 @@ class CheckOut(View):
                 cliente.datosPago = datosPagoAux
                 
                 clientesStripe.create_customer(cliente)
-                tarjeta = tarjetas.create_card(cliente, numeroTarjetaAux, int("20"+fechaCaducidadAux[4:6:1]), int(fechaCaducidadAux[2:4:1]), codigoSeguridadAux)
+                tarjeta = tarjetas.create_card(cliente, numeroTarjetaAux, int("20"+fechaCaducidadAux[3:5]), int(fechaCaducidadAux[0:2]), codigoSeguridadAux)
                 cargos.create_charge(precioTotal, cliente, tarjeta)
                 
             pedido = Pedido.objects.create(cliente=cliente, precio=precioTotal, direccion="calle: " + direccionAux + ", ciudad: " + ciudadAux
@@ -108,7 +108,7 @@ class CheckOut(View):
                     cliente.datosPago = datosPagoAux
                     
                     clientesStripe.create_customer(cliente)
-                    tarjeta = tarjetas.create_card(cliente, numeroTarjetaAux, int("20"+fechaCaducidadAux[4:6:1]), int(fechaCaducidadAux[2:4:1]), codigoSeguridadAux)
+                    tarjeta = tarjetas.create_card(cliente, numeroTarjetaAux, int("20"+fechaCaducidadAux[3:5]), int(fechaCaducidadAux[0:2]), codigoSeguridadAux)
                     cargos.create_charge(precioTotal, cliente, tarjeta)
                     
             pedido = Pedido.objects.create(cliente=cliente, precio=precioTotal, direccion="Calle: " + direccionAux + '\n' + "Ciudad: " + ciudadAux + '\n'
