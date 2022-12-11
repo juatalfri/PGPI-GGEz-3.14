@@ -58,10 +58,8 @@ def Checkout(request):
 
     if request.session.get('cliente') == None:
         clienteAux = clienteAnonimo()
-        #remitentes_mail = [request.POST.get('correo')]
     else:
         clienteAux = request.session.get('cliente')
-        #remitentes_mail = [clienteAux.correo]
   
     precioAux = carrito.precio_total_carrito(juegosAux, carritoAux)
     pedidoAux = Pedido.objects.create(cliente=clienteAux, precio=precioAux, direccion=direccionAux, telefono=telefonoAux, localizador = localizadorAux)
@@ -80,13 +78,6 @@ def Checkout(request):
         juego.save(update_fields=['cantidad'])
         
         juegosConCantidadEmail += str(juego.titulo) + ' x' + str(cantidadComprada) + '\n'
-    
-    asunto_mail = 'GGez: Pedido ' + str(localizadorAux)
-    mensaje_mail = 'Se ha llevado a cabo un pedido con el identificador ' + str(localizadorAux) + ' que contiene los siguientes productos:\n\n' + juegosConCantidadEmail + '\nEl importe total de su pedido es de ' + str(precioAux) + ' .'
-    emisor_mail = 'PGPI.314.2022@gmail.com'
-    remitentes_mail = ['daniel.enriquez.diaz@gmail.com'] #Usado para pruebas, cambiar tras tarea 018
-    
-    send_mail(asunto_mail, mensaje_mail, emisor_mail, remitentes_mail, False)
     
     request.session['carrito'] = {}
     

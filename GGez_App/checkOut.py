@@ -13,8 +13,7 @@ from GGez_App.templatetags import carrito
 from GGez_App.templatetags.carrito import precio_total
 from GGez_App.views import clienteAnonimo
 from GGez_App.templatetags.carrito import cantidad_carrito
-
-
+from django.core.mail import send_mail
 
 class CheckOut(View):
     
@@ -103,7 +102,7 @@ class CheckOut(View):
                     listaErrores.append(mensajeError)
                     return render(request, 'checkOut.html', {'errores': listaErrores, 'noCliente':True, 'precioTotalCarrito':precioTotal})
             elif not contrareembolsoAux and not self.datosVaciosPago(request):
-                    datosPagoAux = DatosPago(numeroTarjeta = numeroTarjetaAux,
+                    datosPagoAux = DatosPago.objects.create(numeroTarjeta = numeroTarjetaAux,
                                     fechaCaducidad = fechaCaducidadAux,
                                     codigoSeguridad = codigoSeguridadAux)
                     cliente.datosPago = datosPagoAux
@@ -117,6 +116,21 @@ class CheckOut(View):
                     localizador=localizadorAux, contrareembolso=contrareembolsoAux)
             pedido.juegos.set(juegosAux)
             pedido.save()
+            
+            juegosConCantidadEmail = ''
+            
+            for juego in juegosAux:
+                cantidadComprada = cantidad_carrito(juego, carritoAux)
+                
+                juegosConCantidadEmail += str(juego.titulo) + ' x' + str(cantidadComprada) + '\n'
+            
+            asunto_mail = 'GGez: Pedido ' + str(localizadorAux)
+            mensaje_mail = 'Se ha llevado a cabo un pedido con el identificador ' + str(localizadorAux) + ' que contiene los siguientes productos:\n\n' + juegosConCantidadEmail + '\nEl importe total de su pedido es de ' + str(precioTotal) + '€.'
+            emisor_mail = 'PGPI.314.2022@gmail.com'
+            remitentes_mail = [cliente.correo]
+    
+            send_mail(asunto_mail, mensaje_mail, emisor_mail, remitentes_mail, False)
+            
             if postData.get('updateDataBase'):
                 cliente.save()
                 
