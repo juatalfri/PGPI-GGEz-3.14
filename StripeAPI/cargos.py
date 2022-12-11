@@ -2,8 +2,8 @@ import stripe
 
 def create_charge(cantidad, cliente, tarjeta):
     return stripe.Charge.create(
-            amount=cantidad,
+            amount=int(cantidad) * 100,
             currency='EUR',
             customer=cliente.clienteStripeId,
-            source=tarjeta.card_id,
+            source=tarjeta.id,
         )

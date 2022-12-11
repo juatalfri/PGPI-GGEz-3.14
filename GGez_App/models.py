@@ -94,7 +94,7 @@ class Cliente(models.Model):
     contrasena = models.CharField(max_length=20)
     datosEnvio = models.OneToOneField(DatosEnvio, on_delete=models.CASCADE, null=True)
     datosPago = models.OneToOneField(DatosPago, on_delete=models.CASCADE, null=True)
-    clienteStripeId = models.IntegerField(null=True)
+    clienteStripeId = models.CharField(null=True, max_length=50)
     
     def registro(self):
         self.save()

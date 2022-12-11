@@ -3,7 +3,7 @@ from GGez_App.models import *
 from django.views import View
 from django.contrib import messages
 from GGez_App import views, carrito
-from StripeAPI import *
+from StripeAPI import cargos, clientesStripe, tarjetas
 from GGez_App.signup import Signup
 from pickle import NONE, FALSE, TRUE
 from numpy.random.mtrand import randint
@@ -65,7 +65,7 @@ class CheckOut(View):
         # si el cliente no está registrado, cliente = anónimo    
         if cliente==None:
             cliente = clienteAnonimo()
-            datosEnvioAux = DatosEnvio(direccion = direccionAux,
+            datosEnvioAux = DatosEnvio.objects.create(direccion = direccionAux,
                                 ciudad = ciudadAux,
                                 codigoPostal = codigoPostalAux,   
                                 provincia = provinciaAux,
@@ -76,10 +76,14 @@ class CheckOut(View):
                 listaErrores.append(mensajeError)
                 return render(request, 'checkOut.html', {'errores': listaErrores, 'noCliente':True, 'precioTotalCarrito':precioTotal})
             elif not contrareembolsoAux and not self.datosVaciosPago(request):
-                datosPagoAux = DatosPago(numeroTarjeta = numeroTarjetaAux,
+                datosPagoAux = DatosPago.objects.create(numeroTarjeta = numeroTarjetaAux,
                                 fechaCaducidad = fechaCaducidadAux,
                                 codigoSeguridad = codigoSeguridadAux)
                 cliente.datosPago = datosPagoAux
+                
+                clientesStripe.create_customer(cliente)
+                tarjeta = tarjetas.create_card(cliente, numeroTarjetaAux, int("20"+fechaCaducidadAux[4:6:1]), int(fechaCaducidadAux[2:4:1]), codigoSeguridadAux)
+                cargos.create_charge(precioTotal, cliente, tarjeta)
                 
             pedido = Pedido.objects.create(cliente=cliente, precio=precioTotal, direccion="calle: " + direccionAux + ", ciudad: " + ciudadAux
                             + ", código postal: " + codigoPostalAux + ", provincia: " + provinciaAux + ", pais: " + paisAux, telefono=cliente.telefono, 
@@ -103,14 +107,16 @@ class CheckOut(View):
                                     fechaCaducidad = fechaCaducidadAux,
                                     codigoSeguridad = codigoSeguridadAux)
                     cliente.datosPago = datosPagoAux
+                    
+                    clientesStripe.create_customer(cliente)
+                    tarjeta = tarjetas.create_card(cliente, numeroTarjetaAux, int("20"+fechaCaducidadAux[4:6:1]), int(fechaCaducidadAux[2:4:1]), codigoSeguridadAux)
+                    cargos.create_charge(precioTotal, cliente, tarjeta)
+                    
             pedido = Pedido.objects.create(cliente=cliente, precio=precioTotal, direccion="calle: " + direccionAux + ", ciudad: " + ciudadAux
                + ", código postal: " + codigoPostalAux + ", provincia: " + provinciaAux + ", pais: " + paisAux, telefono=cliente.telefono, 
                     localizador=localizadorAux, contrareembolso=contrareembolsoAux)
             pedido.juegos.set(juegosAux)
             pedido.save()
-            clientesStripe.create_customer(cliente)
-            tarjeta = tarjetas.create_card(cliente, numeroTarjetaAux, int("20"+fechaCaducidadAux[4:6:1]), int(fechaCaducidadAux[2:4:1]), codigoSeguridadAux)
-            cargos.create_charge(precioTotal, cliente, tarjeta)
             if postData.get('updateDataBase'):
                 cliente.save()
                 
