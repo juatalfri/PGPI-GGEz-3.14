@@ -95,7 +95,10 @@ class CheckOut(View):
                 cliente.datosPago  = None
                 cliente.save()
                 
-                
+        for j, c in carritoAux.items():
+            cantidadPedidoAux = cantidadPedido.objects.create(juego=Juego.getJuegoPorId(j).get(), cantidad=c, pedido=pedido)
+            cantidadPedidoAux.save()
+                         
         for juego in juegosAux:
             cantidadComprada = cantidad_carrito(juego, carritoAux)
             juego.cantidad = juego.cantidad - cantidadComprada

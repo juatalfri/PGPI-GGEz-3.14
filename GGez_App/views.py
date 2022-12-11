@@ -82,11 +82,12 @@ def pedido(request):
     localizador = request.GET.get('searchbarPedido')
     if localizador:
         pedido = Pedido.getPedidoPorLocalizador(localizador).get()
+        print(pedido)
         relacion = list()
         cantidadPedido = Pedido.getCantidadPedido(pedido.id)
         for i in range(len(cantidadPedido)):
             relacion.append(cantidadPedido[i])
-    
+        print(cantidadPedido)
         return render(request, 'pedidos.html', {'relacion' : relacion, 'pedido': pedido})
     else:
         return render(request, 'pedidos.html')
