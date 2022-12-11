@@ -15,6 +15,12 @@
    <p>Aquí encontrarás los mejores juegos a los mejores precios</p>
 </div>
 <br>
+{% if message %}
+<div class="alert alert-success" role="alert">
+	{{message}}
+</div>
+{% endif %}
+
 </body>
 </html>
 

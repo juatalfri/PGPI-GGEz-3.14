@@ -60,17 +60,26 @@
 
             <tfoot>
                 <tr>
-                    <th colspan="4"></th>
-                    <th class="" colspan="">Total</th>
+                <th colspan="4"></th>
+                <th class="" colspan="">Total</th>
+				{% if carritoVacio%}
+					<th>{{00|floatformat:2|divisa}}</th>
+                	</tr>
+
+				{% else %}
                     <th>{{juegos|precio_total_carrito:request.session.carrito|floatformat:2|divisa}}</th>
-                </tr>
+                	</tr>
+					
+				{% endif %}
             </tfoot>
         </table>
-        <hr>
-        <div class="m-3 p-3">
-            <a href="/checkOut/" class="btn btn-outline-success border rounded col-lg-3 float-right"> Confirmar pedido </a>
-        </div>
-   </div>
+				{% if not carritoVacio%}
+			        <hr>
+			        <div class="m-3 p-3">
+			            <a href="/checkOut/" class="btn btn-outline-success border rounded col-lg-3 float-right"> Confirmar pedido </a>
+			        </div>
+				{% endif %}
+	</div>
 </div>
 
 {% endblock %}

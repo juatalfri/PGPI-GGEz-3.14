@@ -14,6 +14,7 @@ class Signup (View):
         telefono = postData.get('telefono')
         correo = postData.get('correo')
         contrasena = postData.get('contrasena')
+        contrasena2 = postData.get('contrasena2')
         nombreUsuario = postData.get('nombreUsuario')
         # validation
         value = {
@@ -33,39 +34,41 @@ class Signup (View):
             correo=correo,
             contrasena=contrasena,
             nombreUsuario=nombreUsuario)
-        mensajeError = self.validarCliente(cliente)
+        mensajeError = self.validarCliente(cliente, contrasena, contrasena2)
   
         if not mensajeError:
             cliente.registro()
             return redirect('inicio')
         else:
             data = {
-                'error': mensajeError,
+                'errores': mensajeError,
                 'values': value
             }
             return render(request, 'signup.html', data)
   
-    def validarCliente(self, cliente):
-        mensajeError = None
-        if (not cliente.nombre):
-            mensajeError = "Introduce tu nombre"
-        elif len(cliente.apellidos) < 3:
-            mensajeError = 'El nombre debe tener al menos 3 caracteres'
-        elif not cliente.apellidos:
-            mensajeError = 'Introduce tus apellidos'
-        elif len(cliente.apellidos) < 3:
-            mensajeError = 'Los apellidos deben tener al menos 3 caracteres'
-        elif not cliente.telefono:
-            mensajeError = 'Introduce tu teléfono'
-        elif len(cliente.telefono) < 9:
-            mensajeError = 'El telefono debe tener al menos 9 digitos'
+    def validarCliente(self, cliente, contrasena, contrasena2):
+        listaErrores=[]
+        if not cliente.nombre:
+            listaErrores.append("Introduce tu nombre.")
+        if len(cliente.nombre) < 3:
+            listaErrores.append("El nombre debe tener al menos 3 caracteres.")
+        if not cliente.apellidos:
+            listaErrores.append("Introduce tus apellidos.")
+        if len(cliente.apellidos) < 3:
+            listaErrores.append("Los apellidos deben tener al menos 3 caracteres.")
+        if not cliente.telefono:
+            listaErrores.append("Introduce tu teléfono.")
+        if len(cliente.telefono) < 9:
+            listaErrores.append("El telefono debe tener al menos 9 digitos.")
         if len(cliente.contrasena) < 5:
-            mensajeError = 'La contraseña debe tener al menos 5 caracteres'
-        elif len(cliente.correo) < 5:
-            mensajeError = 'Correo debe tener más de 5 caracteres'
-        elif not cliente.nombreUsuario:
-            mensajeError = 'Introduce tu nombre de usuario'
-        elif cliente.existe():
-            mensajeError = 'Nombre de usuario ya registrado.'
+            listaErrores.append("La contraseña debe tener al menos 5 caracteres.")
+        if contrasena != contrasena2:
+            listaErrores.append("Las contraseñas deben ser iguales.")
+        if len(cliente.correo) < 5:
+            listaErrores.append("El correo debe tener más de 5 caracteres.")
+        if not cliente.nombreUsuario:
+            listaErrores.append("Introduce tu nombre de usuario.")
+        if cliente.existe():
+            listaErrores.append("Nombre de usuario ya registrado.")
   
-        return mensajeError
+        return listaErrores

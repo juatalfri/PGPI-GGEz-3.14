@@ -38,23 +38,28 @@ def catalogo(request):
     return render(request, 'catalogo.html', data)
 
 def Carrito(request):
-    ids = list(request.session.get('carrito').keys())
-    juegos = Juego.getJuegosPorId(ids)
-    return render(request, 'carrito.html', {'juegos' : juegos})
+    carrito = request.session.get('carrito')
+    if carrito:
+        ids = list(request.session.get('carrito').keys())
+        juegos = Juego.getJuegosPorId(ids)
+    else:
+        juegos= []
+    carritoVacio = len(juegos)==0
+    return render(request, 'carrito.html', {'juegos' : juegos, 'carritoVacio' : carritoVacio})
 
 def Checkout(request):
+    ids = list(request.session.get('carrito').keys())
+    juegos = Juego.getJuegosPorId(ids)
     carritoAux = request.session.get('carrito')
     juegosAux = Juego.getJuegosPorId(list(carritoAux.keys()))
     direccionAux = request.POST.get('direccion')
     telefonoAux = request.POST.get('telefono')
-    localizadorAux = random.choice(string.ascii_letters)+random.choice(string.ascii_letters)+random.choice(string.ascii_letters)+'-'+str(randint(1000,100000))
+    localizadorAux = random.choice(string.ascii_letters)+random.choice(string.ascii_letters)+random.choice(string.ascii_letters)+'-'+str(randint(0, 9)) + str(randint(0, 9)) + str(randint(0, 9)) + str(randint(0, 9))
 
     if request.session.get('cliente') == None:
         clienteAux = clienteAnonimo()
-        #remitentes_mail = [request.POST.get('correo')]
     else:
         clienteAux = request.session.get('cliente')
-        #remitentes_mail = [clienteAux.correo]
   
     precioAux = carrito.precio_total_carrito(juegosAux, carritoAux)
     pedidoAux = Pedido.objects.create(cliente=clienteAux, precio=precioAux, direccion=direccionAux, telefono=telefonoAux, localizador = localizadorAux)
@@ -74,27 +79,23 @@ def Checkout(request):
         
         juegosConCantidadEmail += str(juego.titulo) + ' x' + str(cantidadComprada) + '\n'
     
-    asunto_mail = 'GGez: Pedido ' + str(localizadorAux)
-    mensaje_mail = 'Se ha llevado a cabo un pedido con el identificador ' + str(localizadorAux) + ' que contiene los siguientes productos:\n\n' + juegosConCantidadEmail + '\nEl importe total de su pedido es de ' + str(precioAux) + ' .'
-    emisor_mail = 'PGPI.314.2022@gmail.com'
-    remitentes_mail = ['daniel.enriquez.diaz@gmail.com'] #Usado para pruebas, cambiar tras tarea 018
-    
-    send_mail(asunto_mail, mensaje_mail, emisor_mail, remitentes_mail, False)
-    
     request.session['carrito'] = {}
     
-    return redirect('catalogo')
+    return render(request, 'checkOut.html', {'juegos' : juegos})
 
 def pedido(request):
     localizador = request.GET.get('searchbarPedido')
     if localizador:
-        pedido = Pedido.getPedidoPorLocalizador(localizador).get()
-        relacion = list()
-        cantidadPedido = Pedido.getCantidadPedido(pedido.id)
-        for i in range(len(cantidadPedido)):
-            relacion.append(cantidadPedido[i])
-    
-        return render(request, 'pedidos.html', {'relacion' : relacion, 'pedido': pedido})
+        if not Pedido.getPedidoPorLocalizador(localizador):
+            mensajeError = "El localizador que ha introducido no corresponde a ningún pedido registrado en nuestro sistema"
+            return render(request, 'pedidos.html', {'error':mensajeError})
+        else:
+            pedido = Pedido.getPedidoPorLocalizador(localizador).get()
+            relacion = list()
+            cantidadPedido = Pedido.getCantidadPedido(pedido.id)
+            for i in range(len(cantidadPedido)):
+                relacion.append(cantidadPedido[i])
+            return render(request, 'pedidos.html', {'relacion' : relacion, 'pedido': pedido})
     else:
         return render(request, 'pedidos.html')
 
