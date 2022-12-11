@@ -18,7 +18,6 @@
                 {% csrf_token %}
 
                 {% if error %}
-				<h2>hay errores</h2>
                 <div class="alert alert-danger" role="alert">
                     {{error}}
                 </div>
@@ -77,12 +76,12 @@
                 	<div class="row mt-3">
                     	<div class="col-md-6"><label class="labels">Número de Tarjeta</label><input type="text" name="numeroTarjeta" class="form-control" value="{{ cliente.datosPago.numeroTarjeta }}"></div>
                     	<div class="col-md-6"><label class="labels">Fecha de Caducidad</label><input type="text" name="fechaCaducidad" class="form-control" value="{{ cliente.datosPago.fechaCaducidad }}"></div>
-						<div class="col-md-6"><label class="labels">Código de seguridad</label><input type="text" name="codigoSeguridad" class="form-control"></div>
-						<div class="col-md-6"><label class="labels">Precio a pagar: </label><input type="text" name="precioTotal" class="form-control" value="{{ juegos|precio_total_carrito:request.session.carrito|floatformat:2|divisa }}" readonly></div>
+						<div class="col-md-6"><label class="labels">Código de seguridad</label><input type="text" name="codigoSeguridad" class="form-control" value="{{ cliente.datosPago.codigoSeguridad }}"></div>
+						<div class="col-md-6"><label class="labels">Precio a pagar: </label><input type="text" name="precioTotal" class="form-control" value="{{ precioTotal|floatformat:2|divisa }}" readonly></div>
                 	</div>
                 	<div class="row mt-3" style="margin-bottom:15px">
-	                	<div class="col-md-6"><label class="labels">Mantener datos de envio y pago:</label><input type="checkbox" name="persist" class="form-control"></div>
-	                	<div class="col-md-6"><label class="labels">No persistir ningún dato:</label><input type="checkbox" name="notPersistDataBase" class="form-control"></div>
+	                	<div class="col-md-6"><label class="labels">Actualizar datos de envio y pago de tu perfil:</label><input type="checkbox" name="persist" class="form-control"></div>
+	                	<div class="col-md-6"><label class="labels">Eliminar datos registrados después de la compra:</label><input type="checkbox" name="notPersistDataBase" class="form-control"></div>
                 	</div>
 
 				{% endif %}

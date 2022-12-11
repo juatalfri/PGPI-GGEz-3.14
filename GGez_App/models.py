@@ -67,14 +67,10 @@ class Juego(models.Model):
 
     @staticmethod
     def getJuegosPrecio(minimo,maximo):
-        print(minimo)
         if minimo == '':
             minimo = 0.01
-            print(minimo)
-        print(maximo)
         if maximo == '':
             maximo = 999999.99
-            print(maximo)
         return Juego.objects.filter(precio__range=(minimo,maximo))
 
 class DatosEnvio(models.Model):

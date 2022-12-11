@@ -37,9 +37,14 @@ def catalogo(request):
     return render(request, 'catalogo.html', data)
 
 def Carrito(request):
-    ids = list(request.session.get('carrito').keys())
-    juegos = Juego.getJuegosPorId(ids)
-    return render(request, 'carrito.html', {'juegos' : juegos})
+    carrito = request.session.get('carrito')
+    if carrito:
+        ids = list(request.session.get('carrito').keys())
+        juegos = Juego.getJuegosPorId(ids)
+    else:
+        juegos= []
+    carritoVacio = len(juegos)==0
+    return render(request, 'carrito.html', {'juegos' : juegos, 'carritoVacio' : carritoVacio})
 
 def Checkout(request):
     ids = list(request.session.get('carrito').keys())
