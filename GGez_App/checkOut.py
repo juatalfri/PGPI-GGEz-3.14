@@ -111,8 +111,8 @@ class CheckOut(View):
                     tarjeta = tarjetas.create_card(cliente, numeroTarjetaAux, int("20"+fechaCaducidadAux[4:6:1]), int(fechaCaducidadAux[2:4:1]), codigoSeguridadAux)
                     cargos.create_charge(precioTotal, cliente, tarjeta)
                     
-            pedido = Pedido.objects.create(cliente=cliente, precio=precioTotal, direccion="calle: " + direccionAux + ", ciudad: " + ciudadAux
-               + ", código postal: " + codigoPostalAux + ", provincia: " + provinciaAux + ", pais: " + paisAux, telefono=cliente.telefono, 
+            pedido = Pedido.objects.create(cliente=cliente, precio=precioTotal, direccion="Calle: " + direccionAux + '\n' + "Ciudad: " + ciudadAux + '\n'
+               + "Código Postal: " + codigoPostalAux + '\n' + "Provincia: " + provinciaAux + '\n' + "Pais: " + paisAux, telefono=cliente.telefono, 
                     localizador=localizadorAux, contrareembolso=contrareembolsoAux)
             pedido.juegos.set(juegosAux)
             pedido.save()
@@ -122,10 +122,10 @@ class CheckOut(View):
             for juego in juegosAux:
                 cantidadComprada = cantidad_carrito(juego, carritoAux)
                 
-                juegosConCantidadEmail += str(juego.titulo) + ' x' + str(cantidadComprada) + '\n'
+                juegosConCantidadEmail += '- ' + str(juego.titulo) + ' x' + str(cantidadComprada) + ', desarrollado por ' + juego.desarrollador + ' PEGI:+' + str(juego.pegi) + '\n'
             
             asunto_mail = 'GGez: Pedido ' + str(localizadorAux)
-            mensaje_mail = 'Se ha llevado a cabo un pedido con el identificador ' + str(localizadorAux) + ' que contiene los siguientes productos:\n\n' + juegosConCantidadEmail + '\nEl importe total de su pedido es de ' + str(precioTotal) + '€.'
+            mensaje_mail = 'Se ha llevado a cabo un pedido con el identificador ' + str(localizadorAux) + ' que contiene los siguientes productos:\n\n' + juegosConCantidadEmail + '\nEl importe total de su pedido es de ' + str(precioTotal) + '€ y se entregará a la dirección:\n' + pedido.direccion + '.'
             emisor_mail = 'PGPI.314.2022@gmail.com'
             remitentes_mail = [cliente.correo]
     
