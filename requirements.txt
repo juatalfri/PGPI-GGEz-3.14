@@ -1,0 +1,7 @@
+django
+numpy
+django-bootstrap4
+django-cleanup
+pillow
+python-decouple
+stripe
